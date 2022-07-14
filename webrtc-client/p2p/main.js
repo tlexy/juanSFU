@@ -384,7 +384,7 @@ class ZalRtc
 
 }
 
-let zal_rtc = new ZalRtc("ws://192.168.101.40:8010");
+let zal_rtc = new ZalRtc("wss://127.0.0.1:5000/signaling");
 zal_rtc.CreateToServer();
 
 //action

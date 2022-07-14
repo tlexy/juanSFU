@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 	TlsConfig::init_server("server.crt", "server.key");
 
 	JuanSfu::Instance();
-
+	JuanSfu::GetInstance()->init();
 	JuanSfu::GetInstance()->start_server(5000);
 
 	while (!gstop)

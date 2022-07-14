@@ -4,12 +4,25 @@
 void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection> ptr)
 {
 	std::string cmd = GET_JSON_STRING(msg, "cmd", "");
+	if (cmd == "join")
+	{
+		handle_join(msg, ptr);
+	}
+	else
+	{
+		std::cerr << "undefined cmd: " << cmd << std::endl;
+	}
 }
 
 void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection> ptr)
 {
-	std::string sroomid = GET_JSON_STRING(msg, "roomid", "");
+	std::string sroomid = GET_JSON_STRING(msg, "roomId", "");
 	std::string uid = GET_JSON_STRING(msg, "uid", "");
+	if (sroomid.size() < 1 || uid.size() < 1)
+	{
+		std::cerr << "json format error." << __FUNCTION__  << ", line: " << __LINE__ << std::endl;
+		return;
+	}
 
 	int64_t roomid = std::stoll(sroomid.c_str());
 	auto roomptr = find_room(roomid);
@@ -23,7 +36,7 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 
 	Json::Value ret_json = Json::nullValue;
 	ret_json["cmd"] = "resp-join";
-	ret_json["roomid"] = sroomid;
+	ret_json["roomId"] = sroomid;
 	ret_json["uid"] = uid;
 	ret_json["members"] = Json::arrayValue;
 	for (auto it = roomptr->members.begin(); it != roomptr->members.end(); ++it)
