@@ -12,6 +12,9 @@
     <Filter Include="signaling">
       <UniqueIdentifier>{76bcdd6e-5a73-4d84-b15a-767d94cc3dca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{cbe75d82-56b5-4370-8e2e-122a224b6e4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -20,10 +23,31 @@
     <ClCompile Include="signaling\wss_server.cpp">
       <Filter>signaling</Filter>
     </ClCompile>
+    <ClCompile Include="utils\sutil.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="signaling\signaling_handle.cpp">
+      <Filter>signaling</Filter>
+    </ClCompile>
+    <ClCompile Include="juan_sfu.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
       <Filter>signaling</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\sutil.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\threadqueue.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="signaling\signaling_handle.h">
+      <Filter>signaling</Filter>
+    </ClInclude>
+    <ClInclude Include="juan_sfu.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

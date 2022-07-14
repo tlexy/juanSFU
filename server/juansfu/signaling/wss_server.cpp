@@ -1,5 +1,7 @@
 ﻿#include "wss_server.h"
 #include <iostream>
+#include <juansfu/utils/sutil.h>
+#include <juansfu/signaling/signaling_handle.h>
 
 WssServer::WssServer()
 {}
@@ -20,8 +22,17 @@ void WssServer::on_message(std::shared_ptr<uvcore::SslWsConnection> ptr)
 	std::string recv_msg((char*)ptr->get_dec_buffer()->read_ptr(), ptr->get_dec_buffer()->readable_size());
 	std::cout << "recv: " << recv_msg.c_str() << std::endl;
 	ptr->get_dec_buffer()->reset();
-
-	ptr->get_inner_buffer()->has_read(recv_msg.size());
+	
+	Json::Value json;
+	bool flag = SUtil::parseJson(recv_msg.c_str(), json);
+	if (flag)
+	{
+		SignalingHandle::GetInstance()->handle(json, ptr);
+	}
+	else
+	{
+		std::cerr << "recv msg parse to json failed." << std::endl;
+	}
 }
 
 void WssServer::on_connection_close(std::shared_ptr<uvcore::SslWsConnection> ptr)

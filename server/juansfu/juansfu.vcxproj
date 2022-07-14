@@ -114,15 +114,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\lib;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\build\Debug;$(ProjectDir)..\..\..\uvnet\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>uvnet.lib;uv_a.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\lib;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\build\Debug;$(ProjectDir)..\..\..\uvnet\x64\Debug;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>uvnet.lib;uv_a.lib;libcrypto.lib;libssl.lib;jsoncpp_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,11 +142,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="juan_sfu.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
+    <ClCompile Include="utils\sutil.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="juan_sfu.h" />
+    <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />
+    <ClInclude Include="utils\sutil.h" />
+    <ClInclude Include="utils\threadqueue.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
