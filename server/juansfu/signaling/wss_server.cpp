@@ -38,6 +38,8 @@ void WssServer::on_message(std::shared_ptr<uvcore::SslWsConnection> ptr)
 void WssServer::on_connection_close(std::shared_ptr<uvcore::SslWsConnection> ptr)
 {
 	std::cout << "connection close." << std::endl;
+
+	SignalingHandle::GetInstance()->remove(ptr);
 	_conn_map.erase(ptr->id());
 }
 

@@ -53,10 +53,33 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 	wbuilder["indentation"] = "";
 	std::string send_msg = Json::writeString(wbuilder, ret_json);
 	ptr->writeInLoop(send_msg.c_str(), send_msg.size());
+	_connections[ptr->id()] = roomid;
 }
 
 void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>)
 {}
+
+void SignalingHandle::remove(std::shared_ptr<uvcore::SslWsConnection> ptr)
+{
+	auto it = _connections.find(ptr->id());
+	if (it != _connections.end())
+	{
+		auto rit = _all_rooms.find(it->second);
+		if (rit != _all_rooms.end())
+		{
+			for (auto sit = rit->second->connections.begin(); sit != rit->second->connections.end();
+				++sit)
+			{
+				if (sit->second->id() == ptr->id())
+				{
+					rit->second->members.erase(sit->first);
+					rit->second->connections.erase(sit);
+					return;
+				}
+			}
+		}
+	}
+}
 
 std::shared_ptr<Room> SignalingHandle::find_room(int64_t roomid)
 {

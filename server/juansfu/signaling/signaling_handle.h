@@ -31,6 +31,8 @@ class SignalingHandle : public Singleton<SignalingHandle>
 public:
 	void handle(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>);
 
+	void remove(std::shared_ptr<uvcore::SslWsConnection>);
+
 private:
 	void handle_join(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>);
 	void handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>);
@@ -40,6 +42,7 @@ private:
 
 private:
 	std::unordered_map<int64_t, std::shared_ptr<Room>> _all_rooms;
+	std::unordered_map<int64_t, int64_t> _connections;
 };
 
 #endif
