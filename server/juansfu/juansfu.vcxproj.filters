@@ -17,5 +17,13 @@
     <ClCompile Include="main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="signaling\wss_server.cpp">
+      <Filter>signaling</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="signaling\wss_server.h">
+      <Filter>signaling</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
