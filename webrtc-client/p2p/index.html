@@ -1,0 +1,22 @@
+<html>
+
+<head>
+    <title>WebRTC Mesh Demo</title>
+</head>
+<h1>WebRTC Mesh Demo</h1>
+
+<div id="buttons">
+    <input id="roomId" type="text" placeholder="10098" value="10098" maxlength="40" />
+    <br />
+    <input id="uid" type="text" placeholder="12345" value="12345" maxlength="40" />
+    <button id="joinBtn" type="button">加入</button>
+    <button id="leaveBtn" type="button">离开</button>
+</div>
+<div id="videos">
+    <video id="localVideo" autoplay muted playsinline>本地窗口</video>
+    <video id="remoteVideo" autoplay playsinline>远端窗口</video>
+</div>
+<script src="main.js"></script>
+<script src="adapter-latest.js"></script>
+
+</html>
