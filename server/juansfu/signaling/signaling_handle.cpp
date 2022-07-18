@@ -1,5 +1,6 @@
 ﻿#include "signaling_handle.h"
 #include <websocket/ws_connection.h>
+#include <juansfu/utils/sutil.h>
 
 void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
@@ -7,6 +8,10 @@ void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::Tcp
 	if (cmd == "join")
 	{
 		handle_join(msg, ptr);
+	}
+	else if (cmd == "publish")
+	{
+		handle_publish(msg, ptr); 
 	}
 	else
 	{
@@ -61,7 +66,37 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 }
 
 void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>)
-{}
+{
+	std::string sroomid = GET_JSON_STRING(msg, "roomId", "");
+	std::string uid = GET_JSON_STRING(msg, "uid", "");
+	if (sroomid.size() < 1 || uid.size() < 1)
+	{
+		std::cerr << "json format error." << __FUNCTION__ << ", line: " << __LINE__ << std::endl;
+		return;
+	}
+
+	int64_t roomid = std::stoll(sroomid.c_str());
+	auto roomptr = find_room(roomid);
+	if (roomptr == nullptr)
+	{
+		std::cerr << "roomid not found in publish, roomid: " << roomid << ", uid: " << uid << std::endl;
+		return;
+	}
+	std::string sdp = GET_JSON_STRING(msg, "sdp", "");
+	static std::string start = "sdp\":\"";
+	auto pos = sdp.find(start);
+	if (pos == std::string::npos)
+	{
+		std::cerr << "sdp format error. " << roomid << ", uid: " << uid << std::endl;
+		return;
+	}
+	std::string sdpstr = sdp.substr(pos + start.size(), sdp.size() - pos - 2 - start.size() - 4);
+	std::cout << "publish uid: " << uid << ", sdp: " << sdpstr << std::endl;
+
+	std::vector<std::string> vecs;
+	SUtil::split(sdpstr, "\\r\\n", vecs);
+	int a = 1;
+}
 
 void SignalingHandle::remove(std::shared_ptr<uvcore::TcpConnection> ptr)
 {

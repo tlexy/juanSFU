@@ -34,25 +34,9 @@ class ZalRtcPeer {
     CreatePeerConnection() 
     {
         let conf = {
-            // bundlePolicy: "max-bundle",
-            // rtcpMuxPolicy: "require",
-            // iceTransportPolicy: "all",//relay 或者 all
-            // // 修改ice数组测试效果，需要进行封装
-            // iceServers: [
-            //     {
-            //         "urls": [
-            //             "turn:81.71.41.235:3478?transport=udp",
-            //             "turn:81.71.41.235:3478?transport=tcp"       // 可以插入多个进行备选
-            //         ],
-            //         "username": "test",
-            //         "credential": "tttaBa231"
-            //     },
-            //     {
-            //         "urls": [
-            //             "stun:81.71.41.235:3478"
-            //         ]
-            //     }
-            // ]
+            bundlePolicy: "max-bundle",
+            rtcpMuxPolicy: "require",
+            iceTransportPolicy: "all"
         };
         this.pc = new RTCPeerConnection(conf);
 
@@ -102,7 +86,11 @@ class ZalRtcPeer {
         {
             this.CreatePeerConnection();
         }
-        this.pc.createOffer().then(this.doCreateOffer.bind(this)).catch(function(e){
+        let oo = {
+            "offerToReceiveAudio": false,
+            "offerToReceiveVideo": false
+        }
+        this.pc.createOffer(oo).then(this.doCreateOffer.bind(this)).catch(function(e){
             console.error("handleCreateOfferError: " + e);
         });
     }
@@ -176,7 +164,7 @@ class ZalRtcPeer {
             };
             var message = JSON.stringify(jsonMsg);
             this.ws_connection.send(message);
-            console.info("send candidate message");
+            console.info("send candidate message: " + message);
         } else 
         {
             console.warn("End of candidates");
