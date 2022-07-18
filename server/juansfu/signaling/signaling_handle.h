@@ -9,7 +9,7 @@
 
 namespace uvcore
 {
-	class SslWsConnection;
+	class TcpConnection;
 }
 
 class RoomMember
@@ -23,19 +23,19 @@ class Room
 public:
 	int64_t roomid;
 	std::unordered_map<std::string, std::shared_ptr<RoomMember>> members;
-	std::unordered_map<std::string, std::shared_ptr<uvcore::SslWsConnection>> connections;
+	std::unordered_map<std::string, std::shared_ptr<uvcore::TcpConnection>> connections;
 };
 
 class SignalingHandle : public Singleton<SignalingHandle>
 {
 public:
-	void handle(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>);
+	void handle(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>);
 
-	void remove(std::shared_ptr<uvcore::SslWsConnection>);
+	void remove(std::shared_ptr<uvcore::TcpConnection>);
 
 private:
-	void handle_join(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>);
-	void handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>);
+	void handle_join(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>);
+	void handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>);
 
 	std::shared_ptr<Room> find_room(int64_t roomid);
 	std::shared_ptr<Room> create_room(int64_t roomid);

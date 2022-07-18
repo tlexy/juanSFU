@@ -34,25 +34,25 @@ class ZalRtcPeer {
     CreatePeerConnection() 
     {
         let conf = {
-            bundlePolicy: "max-bundle",
-            rtcpMuxPolicy: "require",
-            iceTransportPolicy: "all",//relay 或者 all
-            // 修改ice数组测试效果，需要进行封装
-            iceServers: [
-                {
-                    "urls": [
-                        "turn:81.71.41.235:3478?transport=udp",
-                        "turn:81.71.41.235:3478?transport=tcp"       // 可以插入多个进行备选
-                    ],
-                    "username": "test",
-                    "credential": "tttaBa231"
-                },
-                {
-                    "urls": [
-                        "stun:81.71.41.235:3478"
-                    ]
-                }
-            ]
+            // bundlePolicy: "max-bundle",
+            // rtcpMuxPolicy: "require",
+            // iceTransportPolicy: "all",//relay 或者 all
+            // // 修改ice数组测试效果，需要进行封装
+            // iceServers: [
+            //     {
+            //         "urls": [
+            //             "turn:81.71.41.235:3478?transport=udp",
+            //             "turn:81.71.41.235:3478?transport=tcp"       // 可以插入多个进行备选
+            //         ],
+            //         "username": "test",
+            //         "credential": "tttaBa231"
+            //     },
+            //     {
+            //         "urls": [
+            //             "stun:81.71.41.235:3478"
+            //         ]
+            //     }
+            // ]
         };
         this.pc = new RTCPeerConnection(conf);
 
@@ -76,7 +76,7 @@ class ZalRtcPeer {
     sendSdpOffer() 
     {
         var jsonMsg = {
-            'cmd': 'sdp-offer',
+            'cmd': 'publish',
             'roomId': this.room_id,
             'uid': this.local_uid,
             'remote_uid': this.remote_uid,
@@ -271,19 +271,32 @@ class ZalRtc
 
     //信令部分
     //新人加入房间
-    handleRemoteNewPeer(json) 
+    // handleRemoteNewPeer(json) 
+    // {
+    //     let remoteUid = json.uid;
+    //     let roomid = json.roomId;
+    //     if (roomid != this.room_id)
+    //     {
+    //         console.error("roomid error: " + roomid, ", this.roomid: " + this.room_id);
+    //         return;
+    //     }
+    //     let ZalRtcPeerObj = this.room.get(this.local_uid);
+    //     if (ZalRtcPeerObj)
+    //     {
+    //         ZalRtcPeerObj.CreateOffer(remoteUid);
+    //     }
+    //     else 
+    //     {
+    //         console.log("handleRemoteNewPeer peer obj is null");
+    //     }
+    // }
+
+    publishStream()
     {
-        let remoteUid = json.uid;
-        let roomid = json.roomId;
-        if (roomid != this.room_id)
-        {
-            console.error("roomid error: " + roomid, ", this.roomid: " + this.room_id);
-            return;
-        }
         let ZalRtcPeerObj = this.room.get(this.local_uid);
         if (ZalRtcPeerObj)
         {
-            ZalRtcPeerObj.CreateOffer(remoteUid);
+            ZalRtcPeerObj.CreateOffer(-1);
         }
         else 
         {
@@ -384,7 +397,7 @@ class ZalRtc
 
 }
 
-let zal_rtc = new ZalRtc("wss://127.0.0.1:5000/signaling");
+let zal_rtc = new ZalRtc("ws://127.0.0.1:5000/signaling");
 zal_rtc.CreateToServer();
 
 //action
@@ -411,4 +424,9 @@ document.getElementById('joinBtn').onclick = function () {
 document.getElementById('leaveBtn').onclick = function () {
     console.log("离开按钮被点击");
     doLeave();
+}
+
+document.getElementById('publishBtn').onclick = function () {
+    console.log("发布按钮被点击");
+    zal_rtc.publishStream();
 }

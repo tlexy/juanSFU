@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <thread>
 #include <signal.h>
-#include <tls/tls_config.h>
+//#include <tls/tls_config.h>
 #include <juansfu/juan_sfu.h>
 #include <utils/sock_utils.h>
 
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	signal(SIGBREAK, kill_signal);
 #endif
 
-	TlsConfig::init_server("server.crt", "server.key");
+	//TlsConfig::init_server("server.crt", "server.key");
 
 	JuanSfu::Instance();
 	JuanSfu::GetInstance()->init();

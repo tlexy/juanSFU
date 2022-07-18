@@ -1,7 +1,7 @@
 ﻿#include "signaling_handle.h"
-#include <tls/ssl_ws_connection.h>
+#include <websocket/ws_connection.h>
 
-void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection> ptr)
+void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
 	std::string cmd = GET_JSON_STRING(msg, "cmd", "");
 	if (cmd == "join")
@@ -14,7 +14,7 @@ void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::Ssl
 	}
 }
 
-void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection> ptr)
+void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
 	std::string sroomid = GET_JSON_STRING(msg, "roomId", "");
 	std::string uid = GET_JSON_STRING(msg, "uid", "");
@@ -52,15 +52,20 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 	Json::StreamWriterBuilder wbuilder;
 	wbuilder["indentation"] = "";
 	std::string send_msg = Json::writeString(wbuilder, ret_json);
-	ptr->writeInLoop(send_msg.c_str(), send_msg.size());
+	auto pptr = std::dynamic_pointer_cast<uvcore::WsConnection>(ptr);
+	if (pptr)
+	{
+		pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
+	}
 	_connections[ptr->id()] = roomid;
 }
 
-void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::SslWsConnection>)
+void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>)
 {}
 
-void SignalingHandle::remove(std::shared_ptr<uvcore::SslWsConnection> ptr)
+void SignalingHandle::remove(std::shared_ptr<uvcore::TcpConnection> ptr)
 {
+	std::cout << "remove ptr, id=" << ptr->id() << std::endl;
 	auto it = _connections.find(ptr->id());
 	if (it != _connections.end())
 	{
@@ -72,12 +77,14 @@ void SignalingHandle::remove(std::shared_ptr<uvcore::SslWsConnection> ptr)
 			{
 				if (sit->second->id() == ptr->id())
 				{
+					std::cerr << "remove uid: " << sit->first << std::endl;
 					rit->second->members.erase(sit->first);
 					rit->second->connections.erase(sit);
-					return;
+					break;
 				}
 			}
 		}
+		_connections.erase(it);
 	}
 }
 
