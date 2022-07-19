@@ -15,6 +15,9 @@
     <Filter Include="utils">
       <UniqueIdentifier>{cbe75d82-56b5-4370-8e2e-122a224b6e4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdp">
+      <UniqueIdentifier>{2a41e516-8570-4b7a-9c55-b97e0581eff6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -32,6 +35,9 @@
     <ClCompile Include="juan_sfu.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="sdp\session_description.cpp">
+      <Filter>sdp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -48,6 +54,9 @@
     </ClInclude>
     <ClInclude Include="juan_sfu.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="sdp\session_description.h">
+      <Filter>sdp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

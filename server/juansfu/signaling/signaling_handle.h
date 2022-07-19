@@ -6,6 +6,7 @@
 #include <string>
 #include <stdint.h>
 #include <unordered_map>
+#include <juansfu/sdp/session_description.h>
 
 namespace uvcore
 {
@@ -16,6 +17,8 @@ class RoomMember
 {
 public:
 	std::string uid;
+	std::shared_ptr<SessionDescription> offer_sdp;
+	std::shared_ptr<SessionDescription> answer_sdp;
 };
 
 class Room

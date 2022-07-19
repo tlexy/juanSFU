@@ -144,12 +144,14 @@
   <ItemGroup>
     <ClCompile Include="juan_sfu.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sdp\session_description.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
     <ClCompile Include="utils\sutil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="juan_sfu.h" />
+    <ClInclude Include="sdp\session_description.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />
     <ClInclude Include="utils\sutil.h" />

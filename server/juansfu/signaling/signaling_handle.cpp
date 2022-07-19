@@ -38,6 +38,7 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 	
 	auto member = std::make_shared<RoomMember>();
 	member->uid = uid;
+	member->offer_sdp = std::make_shared<SessionDescription>();
 
 	Json::Value ret_json = Json::nullValue;
 	ret_json["cmd"] = "resp-join";
@@ -65,7 +66,7 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 	_connections[ptr->id()] = roomid;
 }
 
-void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>)
+void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
 	std::string sroomid = GET_JSON_STRING(msg, "roomId", "");
 	std::string uid = GET_JSON_STRING(msg, "uid", "");
@@ -82,6 +83,13 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 		std::cerr << "roomid not found in publish, roomid: " << roomid << ", uid: " << uid << std::endl;
 		return;
 	}
+	auto it = roomptr->members.find(uid);
+	if (it == roomptr->members.end())
+	{
+		std::cerr << "uid not found in publish, roomid: " << roomid << ", uid: " << uid << std::endl;
+		return;
+	}
+	auto member = it->second;
 	std::string sdp = GET_JSON_STRING(msg, "sdp", "");
 	static std::string start = "sdp\":\"";
 	auto pos = sdp.find(start);
@@ -91,10 +99,41 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 		return;
 	}
 	std::string sdpstr = sdp.substr(pos + start.size(), sdp.size() - pos - 2 - start.size() - 4);
-	std::cout << "publish uid: " << uid << ", sdp: " << sdpstr << std::endl;
+	std::cout << "publish uid: " << uid << ", sdp: " << sdp << std::endl;
 
 	std::vector<std::string> vecs;
 	SUtil::split(sdpstr, "\\r\\n", vecs);
+	if (vecs.size() < 6)
+	{
+		std::cerr << "sdp error, roomid: " << roomid << ", uid: " << uid  << ", sdp: " << sdpstr << std::endl;
+		return;
+	}
+
+	bool flag = member->offer_sdp->parse_sdp(vecs);
+	if (flag)
+	{
+		member->answer_sdp = std::make_shared<SessionDescription>();
+		member->answer_sdp->build(member->offer_sdp);
+		std::string ans_offer = member->answer_sdp->to_string();
+
+		Json::Value ret_json = Json::nullValue;
+		ret_json["cmd"] = "resp-join";
+		ret_json["roomId"] = sroomid;
+		ret_json["uid"] = uid;
+		ret_json["sdp"] = Json::nullValue;
+		ret_json["sdp"]["type"] = "answer";
+		ret_json["sdp"]["sdp"] = ans_offer;
+
+		auto pptr = std::dynamic_pointer_cast<uvcore::WsConnection>(ptr);
+		if (pptr)
+		{
+			Json::StreamWriterBuilder wbuilder;
+			wbuilder["indentation"] = "";
+			std::string send_msg = Json::writeString(wbuilder, ret_json);
+
+			pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
+		}
+	}
 	int a = 1;
 }
 
