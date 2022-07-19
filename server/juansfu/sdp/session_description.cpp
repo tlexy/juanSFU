@@ -7,6 +7,8 @@ const static std::string k_media_proto_savpf = "RTP/SAVPF";
 
 SessionDescription::SessionDescription()
 {
+	_video_sup.name = "video";
+	_audio_sup.name = "audio";
 }
 
 std::string SessionDescription::to_string()
@@ -75,6 +77,14 @@ bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 		{
 			flag = parse_origin(vecs[i]);
 		}
+		else if (vecs[i].find("m=") != std::string::npos)
+		{
+			flag = parse_media(vecs[i]);
+		}
+		else if (vecs[i].find("m=") != std::string::npos)
+		{
+			flag = parse_media(vecs[i]);
+		}
 
 		if (!flag)
 		{
@@ -112,6 +122,58 @@ bool SessionDescription::parse_origin(const std::string& sdp)
 	}
 	session.username = vecs2[0];
 	session.session_id = vecs2[1];
+	return true;
+}
+
+bool SessionDescription::parse_media(const std::string& sdp)
+{
+	std::vector<std::string> vecs;
+	SUtil::split(sdp, "=", vecs);
+	if (vecs.size() != 2)
+	{
+		return false;
+	}
+
+	std::vector<std::string> vecs2;
+	SUtil::split(vecs[1], " ", vecs2);
+	if (vecs2.size() < 4)
+	{
+		return false;
+	}
+
+	MediaCodecSupport sup;
+	sup.port = std::atoi(vecs2[1].c_str());
+	if (vecs2[2] == k_media_proto_dtls_savpf)
+	{
+		sup.dtls = true;
+	}
+	else if (vecs2[2] == k_media_proto_savpf)
+	{
+		sup.dtls = false;
+	}
+	else
+	{
+		return false;
+	}
+	for (int i = 3; i < vecs2.size(); ++i)
+	{
+		CodecInfo info;
+		info.payload_type = std::atoi(vecs2[i].c_str());
+		sup.codec_ids[std::atoi(vecs2[i].c_str())] = info;
+	}
+	//
+	if (vecs2[0] == "video")
+	{
+		_video_sup = sup;
+	}
+	else if (vecs2[0] == "audio")
+	{
+		_audio_sup = sup;
+	}
+	else
+	{
+		return false;
+	}
 	return true;
 }
 

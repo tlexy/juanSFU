@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include <sstream>
+#include <unordered_map>
 
 class SessionSdp
 {
@@ -31,11 +32,20 @@ enum class MediaType {
 	MEDIA_TYPE_VIDEO
 };
 
-class Rtpmap
+class CodecInfo
 {
 public:
 	int payload_type;
 	std::string desc;
+};
+
+class MediaCodecSupport
+{
+public:
+	std::string name;
+	int port;
+	bool dtls;
+	std::unordered_map<int, CodecInfo> codec_ids;
 };
 
 class MediaContent {
@@ -47,7 +57,7 @@ public:
 public:
 	std::string connection_info = "IN IP4 0.0.0.0";
 	std::string fix_attr1 = "rtcp:9 IN IP4 0.0.0.0";
-	std::vector<Rtpmap> rtpmaps;
+	std::vector<CodecInfo> rtpmaps;
 	bool use_dtls = true;
 };
 
@@ -79,11 +89,16 @@ public:
 	std::vector<std::shared_ptr<MediaContent>> media_contents;
 
 private:
+	MediaCodecSupport _video_sup;
+	MediaCodecSupport _audio_sup;
+
+private:
 	void add_media_content(std::stringstream&, std::shared_ptr<MediaContent>);
 
 private:
 	bool parse_version(const std::string&);
 	bool parse_origin(const std::string&);
+	bool parse_media(const std::string&);
 };
 
 #endif
