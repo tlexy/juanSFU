@@ -99,6 +99,7 @@ private:
 	bool parse_version(const std::string&);
 	bool parse_origin(const std::string&);
 	bool parse_media(const std::string&);
+	bool parse_rtpmap(const std::string&);
 };
 
 #endif

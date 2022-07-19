@@ -81,9 +81,9 @@ bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 		{
 			flag = parse_media(vecs[i]);
 		}
-		else if (vecs[i].find("m=") != std::string::npos)
+		else if (vecs[i].find("a=rtpmap") != std::string::npos)
 		{
-			flag = parse_media(vecs[i]);
+			flag = parse_rtpmap(vecs[i]);
 		}
 
 		if (!flag)
@@ -92,6 +92,7 @@ bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 			return false;
 		}
 	}
+	return flag;
 }
 
 bool SessionDescription::parse_version(const std::string& sdp)
@@ -173,6 +174,43 @@ bool SessionDescription::parse_media(const std::string& sdp)
 	else
 	{
 		return false;
+	}
+	return true;
+}
+
+bool SessionDescription::parse_rtpmap(const std::string& sdp)
+{
+	std::vector<std::string> vecs;
+	SUtil::split(sdp, "=", vecs);
+	if (vecs.size() != 2)
+	{
+		return false;
+	}
+
+	std::vector<std::string> vecs2;
+	SUtil::split(vecs[1], " ", vecs2);
+	if (vecs2.size() != 2)
+	{
+		return false;
+	}
+	size_t pos = vecs2[0].find(":");
+	if (pos == std::string::npos)
+	{
+		return false;
+	}
+	std::string sid = vecs2[0].substr(pos + 1);
+	int id = std::atoi(sid.c_str());
+	auto it = _video_sup.codec_ids.find(id);
+	if (it != _video_sup.codec_ids.end())
+	{
+		it->second.desc = vecs2[1];
+		return true;
+	}
+
+	it = _audio_sup.codec_ids.find(id);
+	if (it != _audio_sup.codec_ids.end())
+	{
+		it->second.desc = vecs2[1];
 	}
 	return true;
 }
