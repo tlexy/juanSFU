@@ -94,8 +94,6 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 	{
 		ss << "a=rtcp-mux\r\n";
 	}
-	add_media_direction(ss, ptr->direct);
-
 	ss << "a=" << ptr->ice.mode << "\r\n";
 	ss << "a=ice-ufrag:" << ptr->ice.ufrag << "\r\n";
 	ss << "a=ice-pwd:" << ptr->ice.passwd << "\r\n";
@@ -103,7 +101,10 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 	{
 		auto fp = _fingerprint.get();
 		ss << "a=fingerprint:" << fp->algorithm << " " << fp->GetRfc4572Fingerprint() << "\r\n";
+		ss << "a=setup:" << ptr->connection_role << "\r\n";
 	}
+	ss << "a=mid:" << ptr->mid() << "\r\n";
+	add_media_direction(ss, ptr->direct);
 }
 
 void SessionDescription::add_media_direction(std::stringstream& ss, RtcDirection dir)
@@ -211,7 +212,9 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
 	ipa.passwd = passwd;
 
 	audioptr->ice = ipa;
+	audioptr->connection_role = "passive";
 	vptr->ice = ipa;
+	vptr->connection_role = "passive";
 
 	media_contents.push_back(audioptr);
 	media_contents.push_back(vptr);

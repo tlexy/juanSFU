@@ -108,6 +108,7 @@ public:
 	bool rtcp_mux = true;
 	RtcDirection direct;
 	IceParameter ice;
+	std::string connection_role;
 };
 
 class AudioContentDesc : public MediaContent {
