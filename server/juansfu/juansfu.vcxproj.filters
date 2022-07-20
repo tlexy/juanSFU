@@ -18,6 +18,12 @@
     <Filter Include="sdp">
       <UniqueIdentifier>{2a41e516-8570-4b7a-9c55-b97e0581eff6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rtc_base">
+      <UniqueIdentifier>{cd32675d-3108-4146-ba09-00dcb0abfd24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\system">
+      <UniqueIdentifier>{df745bd1-ccdf-4ac2-bb11-191699c9d01a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,6 +44,9 @@
     <ClCompile Include="sdp\session_description.cpp">
       <Filter>sdp</Filter>
     </ClCompile>
+    <ClCompile Include="rtc_base\helpers.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -57,6 +66,12 @@
     </ClInclude>
     <ClInclude Include="sdp\session_description.h">
       <Filter>sdp</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\helpers.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\system\rtc_export.h">
+      <Filter>rtc_base\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

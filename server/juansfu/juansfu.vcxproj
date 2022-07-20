@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="juan_sfu.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rtc_base\helpers.cc" />
     <ClCompile Include="sdp\session_description.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
@@ -151,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="juan_sfu.h" />
+    <ClInclude Include="rtc_base\helpers.h" />
+    <ClInclude Include="rtc_base\system\rtc_export.h" />
     <ClInclude Include="sdp\session_description.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />
