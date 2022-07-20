@@ -53,7 +53,66 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 	{
 		ss << "a=rtpmap:" << ptr->rtpmaps[i].payload_type << " " << ptr->rtpmaps[i].desc << "\r\n";
 	}
+	//
+	for (int i = 0; i < ptr->fmtps.size(); ++i)
+	{
+		ss << "a=fmtp:" << ptr->fmtps[i].codec_id << " ";
+		for (auto it = ptr->fmtps[i].params.begin(); it != ptr->fmtps[i].params.end();)
+		{
+			ss << it->first << "=" << it->second;
+			if (++it != ptr->fmtps[i].params.end())
+			{
+				ss << ",";
+			}
+			else
+			{
+				break;
+			}
+		}
+		ss << "\r\n";
+	}
+	//
+	for (int i = 0; i < ptr->rtpmaps.size(); ++i)
+	{
+		for (int j = 0; j < ptr->rtpmaps[i].fbs.size(); ++j)
+		{
+			ss << "a=rtcp-fb:" << ptr->rtpmaps[i].payload_type << " " << ptr->rtpmaps[i].fbs[j]->id;
+			if (ptr->rtpmaps[i].fbs[j]->param.empty())
+			{
+				ss << "\r\n";
+			}
+			else
+			{
+				ss << " " << ptr->rtpmaps[i].fbs[j]->param << "\r\n";
+			}
+		}
+	}
+	//
+	if (ptr->rtcp_mux)
+	{
+		ss << "a=rtcp-mux\r\n";
+	}
+	add_media_direction(ss, ptr->direct);
+}
 
+void SessionDescription::add_media_direction(std::stringstream& ss, RtcDirection dir)
+{
+	if (dir == RtcDirection::RecvOnly)
+	{
+		ss << "a=recvonly\r\n";
+	}
+	else if (dir == RtcDirection::SendRecv)
+	{
+		ss << "a=sendrecv\r\n";
+	}
+	else if (dir == RtcDirection::SendOnly)
+	{
+		ss << "a=sendonly\r\n";
+	}
+	else
+	{
+		ss << "a=inactive\r\n";
+	}
 }
 
 void SessionDescription::build(std::shared_ptr<SessionDescription> sdp)
@@ -62,6 +121,72 @@ void SessionDescription::build(std::shared_ptr<SessionDescription> sdp)
 	session.session_id = sdp->session.session_id;
 	session.uni_addr = "0.0.0.0";
 	session.username = "-";
+}
+
+void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
+{
+	RtcDirection direct = RtcDirection::Inactive;
+	if ((options.recv_audio | options.recv_video) 
+		&& (options.send_audio | options.send_video))
+	{
+		direct = RtcDirection::SendRecv;
+	}
+	else if ((options.send_audio | options.send_video)
+		&& (options.recv_audio == false && options.recv_video == false))
+	{
+		direct = RtcDirection::SendOnly;
+	}
+	else if ((options.send_audio == false && options.send_video == false)
+		&& (options.recv_audio || options.recv_video))
+	{
+		direct = RtcDirection::RecvOnly;
+	}
+	
+	//audio
+	auto audioptr = std::make_shared<AudioContentDesc>();
+	audioptr->direct = direct;
+	CodecInfo ci;
+	ci.payload_type = 111;
+	ci.desc = "OPUS/48000/2";
+	ci.fbs.push_back(std::make_shared<FeedbackParameter>("transport-cc"));
+	audioptr->rtpmaps.push_back(ci);
+
+	FormatParameter fp;
+	fp.codec_id = 111;
+	fp.params["minptime"] = "10";
+	fp.params["useinbandfec"] = "1";
+	audioptr->fmtps.push_back(fp);
+
+
+	//video
+	auto vptr = std::make_shared<VideoContentDesc>();
+	vptr->direct = direct;
+	ci.payload_type = 108;
+	ci.desc = "H264/90000";
+	ci.fbs.clear();
+	ci.fbs.push_back(std::make_shared<FeedbackParameter>("goog-remb"));
+	ci.fbs.push_back(std::make_shared<FeedbackParameter>("nack"));
+	ci.fbs.push_back(std::make_shared<FeedbackParameter>("nack", "pli"));
+	vptr->rtpmaps.push_back(ci);
+	ci.fbs.clear();
+	ci.payload_type = 109;
+	ci.desc = "rtx/90000";
+	vptr->rtpmaps.push_back(ci);
+
+	fp.codec_id = 108;
+	fp.params.clear();
+	fp.params["level-asymmetry-allowed"] = "1";
+	fp.params["packetization-mode"] = "1";
+	fp.params["profile-level-id"] = "42e01f";
+	vptr->fmtps.push_back(fp);
+
+	fp.codec_id = 109;
+	fp.params.clear();
+	fp.params["apt"] = "108";
+	vptr->fmtps.push_back(fp);
+
+	media_contents.push_back(audioptr);
+	media_contents.push_back(vptr);
 }
 
 bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)

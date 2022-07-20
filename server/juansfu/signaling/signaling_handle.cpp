@@ -112,12 +112,19 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 	bool flag = member->offer_sdp->parse_sdp(vecs);
 	if (flag)
 	{
+		RTCOfferAnswerOptions options;
+		options.send_audio = false;
+		options.send_video = false;
+		options.recv_audio = true;
+		options.recv_video = true;
+		options.use_rtcp_mux = true;
 		member->answer_sdp = std::make_shared<SessionDescription>();
+		member->answer_sdp->create_answer(options);
 		member->answer_sdp->build(member->offer_sdp);
 		std::string ans_offer = member->answer_sdp->to_string();
 
 		Json::Value ret_json = Json::nullValue;
-		ret_json["cmd"] = "resp-join";
+		ret_json["cmd"] = "resp-publish";
 		ret_json["roomId"] = sroomid;
 		ret_json["uid"] = uid;
 		ret_json["sdp"] = Json::nullValue;
