@@ -125,6 +125,9 @@
     <ClCompile Include="rtc_base\base64\base64.cc">
       <Filter>rtc_base\base64</Filter>
     </ClCompile>
+    <ClCompile Include="utils\global.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -270,6 +273,12 @@
     </ClInclude>
     <ClInclude Include="api\array_view.h">
       <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\singleton.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\global.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

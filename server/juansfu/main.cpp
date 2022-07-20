@@ -5,6 +5,7 @@
 #include <juansfu/juan_sfu.h>
 #include <utils/sock_utils.h>
 #include <juansfu/rtc_base/helpers.h>
+#include <juansfu/utils/global.h>
 
 #pragma comment (lib, "ws2_32.lib")
 #pragma comment (lib, "Iphlpapi.lib")
@@ -36,6 +37,8 @@ int main(int argc, char* argv[])
 	signal(SIGBREAK, kill_signal);
 #endif
 
+	Global::Instance();
+	Global::GetInstance()->init();
 	//TlsConfig::init_server("server.crt", "server.key");
 	rtc::InitRandom(time(NULL));
 	//std::cout << "random str24: " << rtc::CreateRandomString(24) << std::endl;

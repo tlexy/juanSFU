@@ -7,6 +7,7 @@
 #include <memory>
 #include <sstream>
 #include <unordered_map>
+#include <juansfu/rtc_base/ssl_fingerprint.h>
 
 class SessionSdp
 {
@@ -140,6 +141,7 @@ public:
 private:
 	MediaCodecSupport _video_sup;
 	MediaCodecSupport _audio_sup;
+	std::unique_ptr<rtc::SSLFingerprint> _fingerprint;
 
 private:
 	void add_media_content(std::stringstream&, std::shared_ptr<MediaContent>);

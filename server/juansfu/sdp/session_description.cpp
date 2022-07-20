@@ -2,6 +2,7 @@
 #include <iostream>
 #include <juansfu/utils/sutil.h>
 #include <juansfu/rtc_base/helpers.h>
+#include <juansfu/utils/global.h>
 
 const static std::string k_media_proto_dtls_savpf = "UDP/TLS/RTP/SAVPF";
 const static std::string k_media_proto_savpf = "RTP/SAVPF";
@@ -98,6 +99,11 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 	ss << "a=" << ptr->ice.mode << "\r\n";
 	ss << "a=ice-ufrag:" << ptr->ice.ufrag << "\r\n";
 	ss << "a=ice-pwd:" << ptr->ice.passwd << "\r\n";
+	if (_fingerprint && ptr->use_dtls)
+	{
+		auto fp = _fingerprint.get();
+		ss << "a=fingerprint:" << fp->algorithm << " " << fp->GetRfc4572Fingerprint() << "\r\n";
+	}
 }
 
 void SessionDescription::add_media_direction(std::stringstream& ss, RtcDirection dir)
@@ -145,6 +151,13 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
 		&& (options.recv_audio || options.recv_video))
 	{
 		direct = RtcDirection::RecvOnly;
+	}
+
+	_fingerprint = rtc::SSLFingerprint::CreateFromCertificate(*Global::GetInstance()->get_dtls_certificate());
+	if (!_fingerprint)
+	{
+		std::cerr << "_fingerprint generate error." << std::endl;
+		return;
 	}
 	
 	//audio

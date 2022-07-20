@@ -5,6 +5,7 @@
 
 #define LS_VERBOSE
 #define LS_INFO
+#define LS_WARNING
 #define LS_ERROR
 
 #define RTC_LOG(level) std::cout
