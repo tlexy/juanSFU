@@ -84,6 +84,14 @@ enum class RtcDirection
 	Inactive
 };
 
+struct IceParameter
+{
+public:
+	std::string mode;
+	std::string ufrag;
+	std::string passwd;
+};
+
 class MediaContent {
 public:
 	virtual ~MediaContent() {}
@@ -98,6 +106,7 @@ public:
 	bool use_dtls = true;
 	bool rtcp_mux = true;
 	RtcDirection direct;
+	IceParameter ice;
 };
 
 class AudioContentDesc : public MediaContent {

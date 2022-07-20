@@ -24,6 +24,18 @@
     <Filter Include="rtc_base\system">
       <UniqueIdentifier>{df745bd1-ccdf-4ac2-bb11-191699c9d01a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="api">
+      <UniqueIdentifier>{6e3fcd5d-9f7c-497e-88b2-1091c1dd4389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\numerics">
+      <UniqueIdentifier>{313c230d-3be5-4479-ab36-ff30722ac405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\strings">
+      <UniqueIdentifier>{faab61ae-d66e-4cda-970f-cbd26fd66815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\base64">
+      <UniqueIdentifier>{aacb8f7f-a72e-42e9-91ec-a6d95ff6f88f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,6 +58,72 @@
     </ClCompile>
     <ClCompile Include="rtc_base\helpers.cc">
       <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\rtc_certificate.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\rtc_certificate_generator.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\checks.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\ssl_identity.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\time_utils.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\system_time.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\ssl_certificate.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\zero_memory.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_identity.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\ssl_fingerprint.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_certificate.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_key_pair.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\win32.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\string_utils.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\message_digest.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_digest.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_utility.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\string_encode.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\string_to_number.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\strings\string_builder.cc">
+      <Filter>rtc_base\strings</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\copy_on_write_buffer.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\base64\base64.cc">
+      <Filter>rtc_base\base64</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +150,126 @@
     </ClInclude>
     <ClInclude Include="rtc_base\system\rtc_export.h">
       <Filter>rtc_base\system</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ref_count.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ref_counted_object.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ref_counter.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\rtc_certificate.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\rtc_certificate_generator.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="api\scoped_refptr.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\checks.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ssl_identity.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\time_utils.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\system_time.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\numerics\safe_compare.h">
+      <Filter>rtc_base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\numerics\safe_conversions.h">
+      <Filter>rtc_base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\numerics\safe_conversions_impl.h">
+      <Filter>rtc_base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\numerics\safe_minmax.h">
+      <Filter>rtc_base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\system\inline.h">
+      <Filter>rtc_base\system</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ssl_certificate.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\buffer.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\type_traits.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\zero_memory.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_identity.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ssl_fingerprint.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_certificate.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_key_pair.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\win32.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\string_utils.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\message_digest.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_digest.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_utility.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\logging.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\string_encode.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\string_to_number.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\arraysize.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\strings\string_builder.h">
+      <Filter>rtc_base\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\copy_on_write_buffer.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\byte_order.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\system\arch.h">
+      <Filter>rtc_base\system</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\base64\base64.h">
+      <Filter>rtc_base\base64</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ssl_roots.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="api\array_view.h">
+      <Filter>api</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

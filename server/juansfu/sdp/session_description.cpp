@@ -1,6 +1,7 @@
 ﻿#include <juansfu/sdp/session_description.h>
 #include <iostream>
 #include <juansfu/utils/sutil.h>
+#include <juansfu/rtc_base/helpers.h>
 
 const static std::string k_media_proto_dtls_savpf = "UDP/TLS/RTP/SAVPF";
 const static std::string k_media_proto_savpf = "RTP/SAVPF";
@@ -93,6 +94,10 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 		ss << "a=rtcp-mux\r\n";
 	}
 	add_media_direction(ss, ptr->direct);
+
+	ss << "a=" << ptr->ice.mode << "\r\n";
+	ss << "a=ice-ufrag:" << ptr->ice.ufrag << "\r\n";
+	ss << "a=ice-pwd:" << ptr->ice.passwd << "\r\n";
 }
 
 void SessionDescription::add_media_direction(std::stringstream& ss, RtcDirection dir)
@@ -147,7 +152,7 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
 	audioptr->direct = direct;
 	CodecInfo ci;
 	ci.payload_type = 111;
-	ci.desc = "OPUS/48000/2";
+	ci.desc = "opus/48000/2";
 	ci.fbs.push_back(std::make_shared<FeedbackParameter>("transport-cc"));
 	audioptr->rtpmaps.push_back(ci);
 
@@ -184,6 +189,16 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
 	fp.params.clear();
 	fp.params["apt"] = "108";
 	vptr->fmtps.push_back(fp);
+
+	std::string ufrag = rtc::CreateRandomString(4);
+	std::string passwd = rtc::CreateRandomString(24);
+	IceParameter ipa;
+	ipa.ufrag = ufrag;
+	ipa.mode = "ice-lite";
+	ipa.passwd = passwd;
+
+	audioptr->ice = ipa;
+	vptr->ice = ipa;
 
 	media_contents.push_back(audioptr);
 	media_contents.push_back(vptr);

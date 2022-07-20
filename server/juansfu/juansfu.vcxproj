@@ -114,9 +114,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;WEBRTC_WIN;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win;..;.;$(ProjectDir)..\..\..\abseil-cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,16 +145,78 @@
   <ItemGroup>
     <ClCompile Include="juan_sfu.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rtc_base\base64\base64.cc" />
+    <ClCompile Include="rtc_base\checks.cc" />
+    <ClCompile Include="rtc_base\copy_on_write_buffer.cc" />
     <ClCompile Include="rtc_base\helpers.cc" />
+    <ClCompile Include="rtc_base\message_digest.cc" />
+    <ClCompile Include="rtc_base\openssl_certificate.cc" />
+    <ClCompile Include="rtc_base\openssl_digest.cc" />
+    <ClCompile Include="rtc_base\openssl_identity.cc" />
+    <ClCompile Include="rtc_base\openssl_key_pair.cc" />
+    <ClCompile Include="rtc_base\openssl_utility.cc" />
+    <ClCompile Include="rtc_base\rtc_certificate.cc" />
+    <ClCompile Include="rtc_base\rtc_certificate_generator.cc" />
+    <ClCompile Include="rtc_base\ssl_certificate.cc" />
+    <ClCompile Include="rtc_base\ssl_fingerprint.cc" />
+    <ClCompile Include="rtc_base\ssl_identity.cc" />
+    <ClCompile Include="rtc_base\strings\string_builder.cc" />
+    <ClCompile Include="rtc_base\string_encode.cc" />
+    <ClCompile Include="rtc_base\string_to_number.cc" />
+    <ClCompile Include="rtc_base\string_utils.cc" />
+    <ClCompile Include="rtc_base\system_time.cc" />
+    <ClCompile Include="rtc_base\time_utils.cc" />
+    <ClCompile Include="rtc_base\win32.cc" />
+    <ClCompile Include="rtc_base\zero_memory.cc" />
     <ClCompile Include="sdp\session_description.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
     <ClCompile Include="utils\sutil.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="api\array_view.h" />
+    <ClInclude Include="api\scoped_refptr.h" />
     <ClInclude Include="juan_sfu.h" />
+    <ClInclude Include="rtc_base\arraysize.h" />
+    <ClInclude Include="rtc_base\base64\base64.h" />
+    <ClInclude Include="rtc_base\buffer.h" />
+    <ClInclude Include="rtc_base\byte_order.h" />
+    <ClInclude Include="rtc_base\checks.h" />
+    <ClInclude Include="rtc_base\copy_on_write_buffer.h" />
     <ClInclude Include="rtc_base\helpers.h" />
+    <ClInclude Include="rtc_base\logging.h" />
+    <ClInclude Include="rtc_base\message_digest.h" />
+    <ClInclude Include="rtc_base\numerics\safe_compare.h" />
+    <ClInclude Include="rtc_base\numerics\safe_conversions.h" />
+    <ClInclude Include="rtc_base\numerics\safe_conversions_impl.h" />
+    <ClInclude Include="rtc_base\numerics\safe_minmax.h" />
+    <ClInclude Include="rtc_base\openssl.h" />
+    <ClInclude Include="rtc_base\openssl_certificate.h" />
+    <ClInclude Include="rtc_base\openssl_digest.h" />
+    <ClInclude Include="rtc_base\openssl_identity.h" />
+    <ClInclude Include="rtc_base\openssl_key_pair.h" />
+    <ClInclude Include="rtc_base\openssl_utility.h" />
+    <ClInclude Include="rtc_base\ref_count.h" />
+    <ClInclude Include="rtc_base\ref_counted_object.h" />
+    <ClInclude Include="rtc_base\ref_counter.h" />
+    <ClInclude Include="rtc_base\rtc_certificate.h" />
+    <ClInclude Include="rtc_base\rtc_certificate_generator.h" />
+    <ClInclude Include="rtc_base\ssl_certificate.h" />
+    <ClInclude Include="rtc_base\ssl_fingerprint.h" />
+    <ClInclude Include="rtc_base\ssl_identity.h" />
+    <ClInclude Include="rtc_base\ssl_roots.h" />
+    <ClInclude Include="rtc_base\strings\string_builder.h" />
+    <ClInclude Include="rtc_base\string_encode.h" />
+    <ClInclude Include="rtc_base\string_to_number.h" />
+    <ClInclude Include="rtc_base\string_utils.h" />
+    <ClInclude Include="rtc_base\system\arch.h" />
+    <ClInclude Include="rtc_base\system\inline.h" />
     <ClInclude Include="rtc_base\system\rtc_export.h" />
+    <ClInclude Include="rtc_base\system_time.h" />
+    <ClInclude Include="rtc_base\time_utils.h" />
+    <ClInclude Include="rtc_base\type_traits.h" />
+    <ClInclude Include="rtc_base\win32.h" />
+    <ClInclude Include="rtc_base\zero_memory.h" />
     <ClInclude Include="sdp\session_description.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />

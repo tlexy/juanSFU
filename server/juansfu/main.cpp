@@ -10,6 +10,8 @@
 #pragma comment (lib, "Iphlpapi.lib")
 #pragma comment (lib, "Psapi.lib")
 #pragma comment (lib, "Userenv.lib")
+#pragma comment (lib, "Winmm.lib")
+
 
 static bool gstop = false;
 
@@ -36,7 +38,7 @@ int main(int argc, char* argv[])
 
 	//TlsConfig::init_server("server.crt", "server.key");
 	rtc::InitRandom(time(NULL));
-	std::cout << "random str24: " << rtc::CreateRandomString(24) << std::endl;
+	//std::cout << "random str24: " << rtc::CreateRandomString(24) << std::endl;
 
 	JuanSfu::Instance();
 	JuanSfu::GetInstance()->init();
