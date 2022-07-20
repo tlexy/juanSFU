@@ -9,6 +9,7 @@ const SIGNAL_TYPE_LEAVE = "leave";
 const SIGNAL_TYPE_NEW_PEER = "new-peer";
 const SIGNAL_TYPE_PEER_LEAVE = "peer-leave";
 const SIGNAL_TYPE_OFFER = "sdp-offer";
+const SIGNAL_TYPE_RESP_PUBLISH = "resp-publish";
 const SIGNAL_TYPE_ANSWER = "sdp-answer";
 const SIGNAL_TYPE_CANDIDATE = "candidate";
 
@@ -248,6 +249,8 @@ class ZalRtc
             case SIGNAL_TYPE_OFFER:
                 this.handleRemoteOffer(json);
                 break;
+            case SIGNAL_TYPE_RESP_PUBLISH:
+                this.handleResponsePublish(json);
             case SIGNAL_TYPE_ANSWER:
                 this.handleRemoteAnswer(json);
                 break;
@@ -314,6 +317,12 @@ class ZalRtc
         // {
         //     console.log("peer obj is null");
         // }
+    }
+
+    handleResponsePublish(json)
+    {
+        console.log("handleResponsePublish");
+        console.log(json.sdp.sdp);
     }
 
     //对端离开
