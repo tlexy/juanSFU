@@ -23,7 +23,7 @@ std::string SessionDescription::to_string()
 	ss << "t=" << session.ts << "\r\n";
 	ss << session.attr << "\r\n";
 
-	ss << "a=group:BUNDLE audio video" << "\r\n";
+	ss << "a=group:BUNDLE 0 1" << "\r\n";
 
 	for (int i = 0; i < media_contents.size(); ++i)
 	{
@@ -35,7 +35,7 @@ std::string SessionDescription::to_string()
 
 void SessionDescription::add_media_content(std::stringstream& ss, std::shared_ptr<MediaContent> ptr)
 {
-	ss << "m=" << ptr->mid() << " 9 ";
+	ss << "m=" << ptr->name() << " 9 ";
 	if (ptr->use_dtls)
 	{
 		ss << k_media_proto_dtls_savpf;

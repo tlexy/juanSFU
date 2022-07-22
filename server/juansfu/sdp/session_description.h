@@ -99,6 +99,7 @@ public:
 	virtual ~MediaContent() {}
 	virtual MediaType type() = 0;
 	virtual std::string mid() = 0;
+	virtual std::string name() = 0;
 
 public:
 	std::string connection_info = "IN IP4 0.0.0.0";
@@ -116,13 +117,15 @@ public:
 class AudioContentDesc : public MediaContent {
 public:
 	MediaType type() override { return MediaType::MEDIA_TYPE_AUDIO; }
-	std::string mid() override { return "audio"; }
+	std::string mid() override { return "0"; }
+	std::string name() { return "audio"; }
 };
 
 class VideoContentDesc : public MediaContent {
 public:
 	MediaType type() override { return MediaType::MEDIA_TYPE_VIDEO; }
-	std::string mid() override { return "video"; }
+	std::string mid() override { return "1"; }
+	std::string name() { return "video"; }
 };
 
 class SessionDescription

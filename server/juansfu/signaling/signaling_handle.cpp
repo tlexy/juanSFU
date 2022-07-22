@@ -99,7 +99,7 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 		return;
 	}
 	std::string sdpstr = sdp.substr(pos + start.size(), sdp.size() - pos - 2 - start.size() - 4);
-	std::cout << "publish uid: " << uid << ", sdp: " << sdp << std::endl;
+	std::cout << "publish uid: " << uid << ", sdp: " << sdpstr << std::endl;
 
 	std::vector<std::string> vecs;
 	SUtil::split(sdpstr, "\\r\\n", vecs);
