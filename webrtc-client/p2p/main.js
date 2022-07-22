@@ -138,8 +138,8 @@ class ZalRtcPeer {
 
     SetRemoteSdp(sdp)
     {
-        var desc = JSON.parse(sdp);
-        this.pc.setRemoteDescription(desc);
+        //var desc = JSON.parse(sdp);
+        this.pc.setRemoteDescription(sdp);
     }
 
     addIceCandidate(candis)
@@ -251,6 +251,7 @@ class ZalRtc
                 break;
             case SIGNAL_TYPE_RESP_PUBLISH:
                 this.handleResponsePublish(json);
+                break;
             case SIGNAL_TYPE_ANSWER:
                 this.handleRemoteAnswer(json);
                 break;
@@ -323,6 +324,17 @@ class ZalRtc
     {
         console.log("handleResponsePublish");
         console.log(json.sdp.sdp);
+        let roomid = json.roomId;
+        if (roomid != this.room_id) {
+            console.error("handleResponsePublish, roomid error: " + roomid);
+            return;
+        }
+        let ZalRtcPeerObj = this.room.get(json.uid);
+        if (typeof (ZalRtcPeerObj) == "undefined") {
+            console.error("handleResponsePublish, user not found, uid: " + uid);
+            return;
+        }
+        ZalRtcPeerObj.SetRemoteSdp(json.sdp);
     }
 
     //对端离开
