@@ -105,6 +105,17 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 	}
 	ss << "a=mid:" << ptr->mid() << "\r\n";
 	add_media_direction(ss, ptr->direct);
+	for (int i = 0; i < ptr->cands.size(); ++i)
+	{
+		ss << "a=candidate:" << ptr->cands[i]->foundation
+			<< " " << ptr->cands[i]->component
+			<< " " << ptr->cands[i]->protocol
+			<< " " << ptr->cands[i]->priority
+			<< " " << ptr->cands[i]->address.HostAsURIString()
+			<< " " << ptr->cands[i]->port
+			<< " typ " << ptr->cands[i]->type
+			<< "\r\n";
+	}
 }
 
 void SessionDescription::add_media_direction(std::stringstream& ss, RtcDirection dir)
@@ -215,6 +226,18 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
 	audioptr->connection_role = "passive";
 	vptr->ice = ipa;
 	vptr->connection_role = "passive";
+
+	auto cand = std::make_shared<IceCandidate>("192.168.0.1", 7000);
+	cand->component = IceCandidateComponent::RTP;
+	cand->username = ufrag;
+	cand->password = passwd;
+	cand->type = LOCAL_PORT_TYPE;
+	cand->protocol = "udp";
+	cand->foundation = cand->compute_foundation(cand->type, cand->protocol, "", cand->address);
+	cand->priority = cand->get_priority(ICE_TYPE_PREFERENCE_HOST, 0, 0);
+
+	audioptr->cands.push_back(cand);
+	vptr->cands.push_back(cand);
 
 	media_contents.push_back(audioptr);
 	media_contents.push_back(vptr);

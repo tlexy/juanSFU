@@ -148,8 +148,11 @@
     <ClCompile Include="rtc_base\base64\base64.cc" />
     <ClCompile Include="rtc_base\checks.cc" />
     <ClCompile Include="rtc_base\copy_on_write_buffer.cc" />
+    <ClCompile Include="rtc_base\crc32.cc" />
     <ClCompile Include="rtc_base\helpers.cc" />
+    <ClCompile Include="rtc_base\ip_address.cc" />
     <ClCompile Include="rtc_base\message_digest.cc" />
+    <ClCompile Include="rtc_base\net_helpers.cc" />
     <ClCompile Include="rtc_base\openssl_certificate.cc" />
     <ClCompile Include="rtc_base\openssl_digest.cc" />
     <ClCompile Include="rtc_base\openssl_identity.cc" />
@@ -157,6 +160,7 @@
     <ClCompile Include="rtc_base\openssl_utility.cc" />
     <ClCompile Include="rtc_base\rtc_certificate.cc" />
     <ClCompile Include="rtc_base\rtc_certificate_generator.cc" />
+    <ClCompile Include="rtc_base\socket_address.cc" />
     <ClCompile Include="rtc_base\ssl_certificate.cc" />
     <ClCompile Include="rtc_base\ssl_fingerprint.cc" />
     <ClCompile Include="rtc_base\ssl_identity.cc" />
@@ -167,7 +171,9 @@
     <ClCompile Include="rtc_base\system_time.cc" />
     <ClCompile Include="rtc_base\time_utils.cc" />
     <ClCompile Include="rtc_base\win32.cc" />
+    <ClCompile Include="rtc_base\win\windows_version.cc" />
     <ClCompile Include="rtc_base\zero_memory.cc" />
+    <ClCompile Include="sdp\ice_candidate.cpp" />
     <ClCompile Include="sdp\session_description.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
@@ -184,9 +190,12 @@
     <ClInclude Include="rtc_base\byte_order.h" />
     <ClInclude Include="rtc_base\checks.h" />
     <ClInclude Include="rtc_base\copy_on_write_buffer.h" />
+    <ClInclude Include="rtc_base\crc32.h" />
     <ClInclude Include="rtc_base\helpers.h" />
+    <ClInclude Include="rtc_base\ip_address.h" />
     <ClInclude Include="rtc_base\logging.h" />
     <ClInclude Include="rtc_base\message_digest.h" />
+    <ClInclude Include="rtc_base\net_helpers.h" />
     <ClInclude Include="rtc_base\numerics\safe_compare.h" />
     <ClInclude Include="rtc_base\numerics\safe_conversions.h" />
     <ClInclude Include="rtc_base\numerics\safe_conversions_impl.h" />
@@ -202,6 +211,7 @@
     <ClInclude Include="rtc_base\ref_counter.h" />
     <ClInclude Include="rtc_base\rtc_certificate.h" />
     <ClInclude Include="rtc_base\rtc_certificate_generator.h" />
+    <ClInclude Include="rtc_base\socket_address.h" />
     <ClInclude Include="rtc_base\ssl_certificate.h" />
     <ClInclude Include="rtc_base\ssl_fingerprint.h" />
     <ClInclude Include="rtc_base\ssl_identity.h" />
@@ -217,7 +227,9 @@
     <ClInclude Include="rtc_base\time_utils.h" />
     <ClInclude Include="rtc_base\type_traits.h" />
     <ClInclude Include="rtc_base\win32.h" />
+    <ClInclude Include="rtc_base\win\windows_version.h" />
     <ClInclude Include="rtc_base\zero_memory.h" />
+    <ClInclude Include="sdp\ice_candidate.h" />
     <ClInclude Include="sdp\session_description.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />

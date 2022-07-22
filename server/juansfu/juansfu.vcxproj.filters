@@ -36,6 +36,9 @@
     <Filter Include="rtc_base\base64">
       <UniqueIdentifier>{aacb8f7f-a72e-42e9-91ec-a6d95ff6f88f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rtc_base\win">
+      <UniqueIdentifier>{3190b4ad-d411-4966-93e6-3f2ed6e936b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -127,6 +130,24 @@
     </ClCompile>
     <ClCompile Include="utils\global.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="sdp\ice_candidate.cpp">
+      <Filter>sdp</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\socket_address.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\ip_address.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\net_helpers.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\win\windows_version.cc">
+      <Filter>rtc_base\win</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\crc32.cc">
+      <Filter>rtc_base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -279,6 +300,24 @@
     </ClInclude>
     <ClInclude Include="utils\global.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="sdp\ice_candidate.h">
+      <Filter>sdp</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\socket_address.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ip_address.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\net_helpers.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\win\windows_version.h">
+      <Filter>rtc_base\win</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\crc32.h">
+      <Filter>rtc_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

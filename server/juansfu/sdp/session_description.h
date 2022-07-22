@@ -8,6 +8,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <juansfu/rtc_base/ssl_fingerprint.h>
+#include <juansfu/sdp/ice_candidate.h>
 
 class SessionSdp
 {
@@ -109,6 +110,7 @@ public:
 	RtcDirection direct;
 	IceParameter ice;
 	std::string connection_role;
+	std::vector<std::shared_ptr<IceCandidate>> cands;
 };
 
 class AudioContentDesc : public MediaContent {
