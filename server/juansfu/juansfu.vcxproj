@@ -177,6 +177,7 @@
     <ClCompile Include="sdp\session_description.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
+    <ClCompile Include="udp\stun.cpp" />
     <ClCompile Include="udp\udp_receiver.cpp" />
     <ClCompile Include="utils\global.cpp" />
     <ClCompile Include="utils\sutil.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="sdp\session_description.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />
+    <ClInclude Include="udp\stun.h" />
     <ClInclude Include="udp\udp_receiver.h" />
     <ClInclude Include="utils\global.h" />
     <ClInclude Include="utils\singleton.h" />

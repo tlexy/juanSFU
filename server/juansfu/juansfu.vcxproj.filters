@@ -155,6 +155,9 @@
     <ClCompile Include="udp\udp_receiver.cpp">
       <Filter>udp</Filter>
     </ClCompile>
+    <ClCompile Include="udp\stun.cpp">
+      <Filter>udp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -326,6 +329,9 @@
       <Filter>rtc_base</Filter>
     </ClInclude>
     <ClInclude Include="udp\udp_receiver.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="udp\stun.h">
       <Filter>udp</Filter>
     </ClInclude>
   </ItemGroup>
