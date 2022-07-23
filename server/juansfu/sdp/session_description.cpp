@@ -146,8 +146,9 @@ void SessionDescription::build(std::shared_ptr<SessionDescription> sdp)
 	session.username = "-";
 }
 
-void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
+void SessionDescription::create_answer(const RTCOfferAnswerOptions& options, const uvcore::IpAddress& addr)
 {
+	_addr = addr;
 	RtcDirection direct = RtcDirection::Inactive;
 	if ((options.recv_audio | options.recv_video) 
 		&& (options.send_audio | options.send_video))
@@ -227,7 +228,7 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options)
 	vptr->ice = ipa;
 	vptr->connection_role = "passive";
 
-	auto cand = std::make_shared<IceCandidate>("192.168.0.1", 7000);
+	auto cand = std::make_shared<IceCandidate>(_addr.getIp(), _addr.getPort());
 	cand->component = IceCandidateComponent::RTP;
 	cand->username = ufrag;
 	cand->password = passwd;

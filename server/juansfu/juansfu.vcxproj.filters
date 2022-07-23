@@ -39,6 +39,9 @@
     <Filter Include="rtc_base\win">
       <UniqueIdentifier>{3190b4ad-d411-4966-93e6-3f2ed6e936b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="udp">
+      <UniqueIdentifier>{85caba83-8751-4840-a0f5-1a2dfedd88a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -148,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="rtc_base\crc32.cc">
       <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="udp\udp_receiver.cpp">
+      <Filter>udp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +324,9 @@
     </ClInclude>
     <ClInclude Include="rtc_base\crc32.h">
       <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="udp\udp_receiver.h">
+      <Filter>udp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

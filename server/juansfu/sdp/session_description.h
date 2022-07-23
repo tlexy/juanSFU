@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <juansfu/rtc_base/ssl_fingerprint.h>
 #include <juansfu/sdp/ice_candidate.h>
+#include <uvnet/core/ip_address.h>
 
 class SessionSdp
 {
@@ -136,7 +137,7 @@ public:
 
 	bool parse_sdp(const std::vector<std::string>& vecs);
 
-	void create_answer(const RTCOfferAnswerOptions&);
+	void create_answer(const RTCOfferAnswerOptions&, const uvcore::IpAddress&);
 	void build(std::shared_ptr<SessionDescription>);
 	std::string to_string();
 
@@ -148,6 +149,7 @@ private:
 	MediaCodecSupport _video_sup;
 	MediaCodecSupport _audio_sup;
 	std::unique_ptr<rtc::SSLFingerprint> _fingerprint;
+	uvcore::IpAddress _addr;
 
 private:
 	void add_media_content(std::stringstream&, std::shared_ptr<MediaContent>);

@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;WEBRTC_WIN;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win;..;.;$(ProjectDir)..\..\..\abseil-cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win;..;.;$(ProjectDir)..\..\..\abseil-cpp;$(ProjectDir)..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -177,6 +177,7 @@
     <ClCompile Include="sdp\session_description.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
+    <ClCompile Include="udp\udp_receiver.cpp" />
     <ClCompile Include="utils\global.cpp" />
     <ClCompile Include="utils\sutil.cpp" />
   </ItemGroup>
@@ -233,6 +234,7 @@
     <ClInclude Include="sdp\session_description.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />
+    <ClInclude Include="udp\udp_receiver.h" />
     <ClInclude Include="utils\global.h" />
     <ClInclude Include="utils\singleton.h" />
     <ClInclude Include="utils\sutil.h" />

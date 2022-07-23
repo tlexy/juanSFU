@@ -1,6 +1,8 @@
 ﻿#include "signaling_handle.h"
 #include <websocket/ws_connection.h>
 #include <juansfu/utils/sutil.h>
+#include <juansfu/udp/udp_receiver.h>
+#include <juansfu/utils/global.h>
 
 void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
@@ -112,6 +114,8 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 	bool flag = member->offer_sdp->parse_sdp(vecs);
 	if (flag)
 	{
+		uvcore::IpAddress addr(7000);
+		addr.setIp("192.168.101.40");//127.0.0.1
 		RTCOfferAnswerOptions options;
 		options.send_audio = false;
 		options.send_video = false;
@@ -119,7 +123,7 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 		options.recv_video = true;
 		options.use_rtcp_mux = true;
 		member->answer_sdp = std::make_shared<SessionDescription>();
-		member->answer_sdp->create_answer(options);
+		member->answer_sdp->create_answer(options, addr);
 		member->answer_sdp->build(member->offer_sdp);
 		std::string ans_offer = member->answer_sdp->to_string();
 
@@ -140,6 +144,8 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 
 			pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
 		}
+		member->udp_receiver = std::make_shared<UdpReceiver>(addr, Global::GetInstance()->get_udp_server());
+		member->udp_receiver->start();
 	}
 	int a = 1;
 }
