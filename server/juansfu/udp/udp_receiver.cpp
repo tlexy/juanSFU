@@ -8,6 +8,11 @@ UdpReceiver::UdpReceiver(const uvcore::IpAddress& addr,
 	_udp_server(server)
 {}
 
+void UdpReceiver::set_data_cb(ReceiverDataCb cb)
+{
+	_data_cb = cb;
+}
+
 void UdpReceiver::start()
 {
 	using namespace std::placeholders;
@@ -23,7 +28,8 @@ void UdpReceiver::start()
 void UdpReceiver::on_udp_receive(uvcore::Udp* udp, const struct sockaddr* addr)
 {
 	std::cout << "recv udp data, len: " << udp->get_inner_buffer()->readable_size() << std::endl;
-
-	StunPacket* sp = StunPacket::parse(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
-	udp->get_inner_buffer()->reset();
+	if (_data_cb)
+	{
+		_data_cb(udp, addr);
+	}
 }

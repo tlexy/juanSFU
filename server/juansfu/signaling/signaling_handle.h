@@ -14,15 +14,7 @@ namespace uvcore
 }
 
 class UdpReceiver;
-
-class RoomMember
-{
-public:
-	std::string uid;
-	std::shared_ptr<SessionDescription> offer_sdp;
-	std::shared_ptr<SessionDescription> answer_sdp;
-	std::shared_ptr<UdpReceiver> udp_receiver;
-};
+class RoomMember;
 
 class Room
 {

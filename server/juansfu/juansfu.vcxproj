@@ -175,6 +175,7 @@
     <ClCompile Include="rtc_base\zero_memory.cc" />
     <ClCompile Include="sdp\ice_candidate.cpp" />
     <ClCompile Include="sdp\session_description.cpp" />
+    <ClCompile Include="signaling\room_member.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
     <ClCompile Include="udp\stun.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="rtc_base\zero_memory.h" />
     <ClInclude Include="sdp\ice_candidate.h" />
     <ClInclude Include="sdp\session_description.h" />
+    <ClInclude Include="signaling\room_member.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />
     <ClInclude Include="udp\stun.h" />

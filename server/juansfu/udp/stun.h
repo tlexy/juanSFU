@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <list>
 #include <memory>
+#include <juansfu/sdp/session_description.h>
 
 #define STUN_HEADER_SIZE 20
 
@@ -76,6 +77,7 @@ struct stun_header
 class StunAttribute
 {
 public:
+    virtual ~StunAttribute();
     uint16_t type;
     uint16_t len;
 };
@@ -92,6 +94,7 @@ class StunAttributeIntegrity
     : public StunAttribute
 {
 public:
+    size_t endpos;//计算Integrity的截止位置
     std::string hmac_sha1;
 };
 
@@ -101,6 +104,7 @@ public:
     StunPacket();
 
     void parse_attri(const uint8_t* data, size_t len);
+    bool validate(const IceParameter& param, const uint8_t* data, size_t len);
 
 public:
     static bool is_stun(const uint8_t* data, size_t len);
@@ -110,6 +114,8 @@ public:
 public:
     static const uint8_t magic_cookie[];
     stun_header hdr;
+    STUN_CLASS_ENUM cls;
+    STUN_METHOD_ENUM method;
 
 private:
     std::list<std::shared_ptr<StunAttribute>> _attris;

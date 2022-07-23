@@ -158,6 +158,9 @@
     <ClCompile Include="udp\stun.cpp">
       <Filter>udp</Filter>
     </ClCompile>
+    <ClCompile Include="signaling\room_member.cpp">
+      <Filter>signaling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -333,6 +336,9 @@
     </ClInclude>
     <ClInclude Include="udp\stun.h">
       <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="signaling\room_member.h">
+      <Filter>signaling</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

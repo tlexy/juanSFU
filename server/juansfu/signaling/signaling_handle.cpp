@@ -3,6 +3,7 @@
 #include <juansfu/utils/sutil.h>
 #include <juansfu/udp/udp_receiver.h>
 #include <juansfu/utils/global.h>
+#include <juansfu/signaling/room_member.h>
 
 void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
@@ -144,8 +145,7 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 
 			pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
 		}
-		member->udp_receiver = std::make_shared<UdpReceiver>(addr, Global::GetInstance()->get_udp_server());
-		member->udp_receiver->start();
+		member->start_recv(addr);
 	}
 	int a = 1;
 }
