@@ -142,8 +142,9 @@ bool StunPacket::validate(const IceParameter& param, const uint8_t* data, size_t
                 return false;
             }
             stun_header* hdr = (stun_header*)data;
-            //修改长度
-            hdr->msg_len = rtc::HostToNetwork16(ptr->endpos);
+            //修改长度，长度应该包括Integrity的长度（24），但计算的内容不包括Integrity的内容
+            uint16_t ori_msg_len = hdr->msg_len;
+            hdr->msg_len = rtc::HostToNetwork16(ptr->endpos + 24 - STUN_HEADER_SIZE);
             char hmac[k_stun_message_integrity_size];
             size_t ret = rtc::ComputeHmac(rtc::DIGEST_SHA_1, param.passwd.c_str(),
                 param.passwd.length(), data, ptr->endpos, hmac,
@@ -156,6 +157,7 @@ bool StunPacket::validate(const IceParameter& param, const uint8_t* data, size_t
             {
                 return false;
             }
+            hdr->msg_len = ori_msg_len;
         }
     }
     return true;
