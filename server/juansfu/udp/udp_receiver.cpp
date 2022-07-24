@@ -30,6 +30,7 @@ void UdpReceiver::on_udp_receive(uvcore::Udp* udp, const struct sockaddr* addr)
 	std::cout << "recv udp data, len: " << udp->get_inner_buffer()->readable_size() << std::endl;
 	if (_data_cb)
 	{
-		_data_cb(udp, addr);
+		uvcore::IpAddress ipaddr = uvcore::IpAddress::fromRawSocketAddress((sockaddr*)addr, sizeof(struct sockaddr_in));
+		_data_cb(udp, ipaddr);
 	}
 }

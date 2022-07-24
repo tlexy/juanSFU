@@ -178,6 +178,7 @@
     <ClCompile Include="signaling\room_member.cpp" />
     <ClCompile Include="signaling\signaling_handle.cpp" />
     <ClCompile Include="signaling\wss_server.cpp" />
+    <ClCompile Include="udp\ice_connection.cpp" />
     <ClCompile Include="udp\stun.cpp" />
     <ClCompile Include="udp\udp_receiver.cpp" />
     <ClCompile Include="utils\global.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="signaling\room_member.h" />
     <ClInclude Include="signaling\signaling_handle.h" />
     <ClInclude Include="signaling\wss_server.h" />
+    <ClInclude Include="udp\ice_connection.h" />
     <ClInclude Include="udp\stun.h" />
     <ClInclude Include="udp\udp_receiver.h" />
     <ClInclude Include="utils\global.h" />

@@ -41,6 +41,12 @@ typedef enum
 
 typedef enum
 {
+    STUN_BINDING = 0x0001,
+    STUN_BINDING_RESPONSE = 0x0101
+} STUN_MESSAGE_TYPE;
+
+typedef enum
+{
     STUN_MAPPED_ADDRESS = 0x0001,
     STUN_USERNAME = 0x0006,
     STUN_MESSAGE_INTEGRITY = 0x0008,

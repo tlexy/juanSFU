@@ -2,6 +2,7 @@
 #include <juansfu/udp/udp_receiver.h>
 #include <juansfu/utils/global.h>
 #include <juansfu/udp/stun.h>
+#include <juansfu/udp/ice_connection.h>
 
 void RoomMember::start_recv(const uvcore::IpAddress& addr)
 {
@@ -13,16 +14,31 @@ void RoomMember::start_recv(const uvcore::IpAddress& addr)
 	udp_receiver->start();
 }
 
-void RoomMember::on_udp_receive(uvcore::Udp* udp, const struct sockaddr* addr)
+void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 {
-	StunPacket* sp = StunPacket::parse(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
-	udp->get_inner_buffer()->reset();
-
-	bool flag = true;
-	if (answer_sdp->media_contents.size() > 0)
+	if (StunPacket::is_stun(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
-		flag = sp->validate(answer_sdp->media_contents[0]->ice, 
-			udp->get_inner_buffer()->read_ptr(), 
-			udp->get_inner_buffer()->readable_size());
+		auto it = ice_connections.find(addr.toString());
+		if (it != ice_connections.end())
+		{
+			it->second->on_udp_data(udp);
+			return;
+		}
+		//new connection...
+		StunPacket* sp = StunPacket::parse(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
+		udp->get_inner_buffer()->reset();
+
+		bool flag = true;
+		if (answer_sdp->media_contents.size() > 0)
+		{
+			flag = sp->validate(answer_sdp->media_contents[0]->ice,
+				udp->get_inner_buffer()->read_ptr(),
+				udp->get_inner_buffer()->readable_size());
+		}
+		if (flag)
+		{
+			ice_connections[addr.toString()] = std::make_shared<IceConnection>(addr);
+		}
+		delete sp;
 	}
 }

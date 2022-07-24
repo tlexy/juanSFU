@@ -6,7 +6,7 @@
 #include <uvnet/core/ip_address.h>
 #include <uvnet/core/udp_server.h>
 
-using ReceiverDataCb = std::function<void(uvcore::Udp*, const struct sockaddr*)>;
+using ReceiverDataCb = std::function<void(uvcore::Udp*, const uvcore::IpAddress&)>;
 
 class UdpReceiver
 {

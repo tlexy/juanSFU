@@ -161,6 +161,9 @@
     <ClCompile Include="signaling\room_member.cpp">
       <Filter>signaling</Filter>
     </ClCompile>
+    <ClCompile Include="udp\ice_connection.cpp">
+      <Filter>udp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -339,6 +342,9 @@
     </ClInclude>
     <ClInclude Include="signaling\room_member.h">
       <Filter>signaling</Filter>
+    </ClInclude>
+    <ClInclude Include="udp\ice_connection.h">
+      <Filter>udp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
