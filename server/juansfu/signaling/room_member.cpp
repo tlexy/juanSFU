@@ -37,7 +37,9 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 		}
 		if (flag)
 		{
-			ice_connections[addr.toString()] = std::make_shared<IceConnection>(addr);
+			auto ptr = std::make_shared<IceConnection>(addr, _addr);
+			ice_connections[addr.toString()] = ptr;
+			ptr->send_binding_response(udp, sp, answer_sdp->media_contents[0]->ice.passwd);
 		}
 		delete sp;
 	}

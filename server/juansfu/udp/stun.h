@@ -6,8 +6,11 @@
 #include <list>
 #include <memory>
 #include <juansfu/sdp/session_description.h>
+#include <juansfu/rtc_base/byte_buffer.h>
+#include <uvnet/core/ip_address.h>
 
 #define STUN_HEADER_SIZE 20
+const uint32_t k_stun_magic_cookie = 0x2112A442;
 
 /*
 rfc: https://datatracker.ietf.org/doc/html/rfc5389
@@ -83,6 +86,7 @@ struct stun_header
 class StunAttribute
 {
 public:
+    virtual int write(rtc::ByteBufferWriter* writer) { return 0; };
     virtual ~StunAttribute();
     uint16_t type;
     uint16_t len;
@@ -104,6 +108,42 @@ public:
     std::string hmac_sha1;
 };
 
+class StunAttributeIceControlling
+    : public StunAttribute
+{
+public:
+    std::string text;
+};
+
+class StunAttributeUseCandidate
+    : public StunAttribute
+{
+};
+
+class StunAttributePriority
+    : public StunAttribute
+{
+public:
+    uint32_t priority;
+};
+
+class StunAttributeFingerPrint
+    : public StunAttribute
+{
+public:
+    uint32_t fp;
+};
+
+class StunAttributeXorAddress
+    : public StunAttribute
+{
+public:
+    uvcore::IpAddress addr;
+    uint8_t family;
+
+    virtual int write(rtc::ByteBufferWriter* writer);
+};
+
 class StunPacket
 {
 public:
@@ -112,10 +152,18 @@ public:
     void parse_attri(const uint8_t* data, size_t len);
     bool validate(const IceParameter& param, const uint8_t* data, size_t len);
 
+    void add_attribute(std::shared_ptr<StunAttribute>);
+
+    void serialize_bind_response(rtc::ByteBufferWriter* writer, const std::string& pwd);
+
 public:
     static bool is_stun(const uint8_t* data, size_t len);
     static StunPacket* parse(const uint8_t* data, size_t len);
     static bool validate_fingerprint(const uint8_t* data, size_t len);
+    static int get_real_len(int len);
+
+private:
+    std::shared_ptr<StunAttribute> get_attribute(STUN_ATTRIBUTE_ENUM);
 
 public:
     static const uint8_t magic_cookie[];

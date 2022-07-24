@@ -84,6 +84,12 @@ StunPacket* StunPacket::parse(const uint8_t* data, size_t len)
     uint16_t msg_method = (msg_type & 0x000f) | ((msg_type & 0x00e0) >> 1) | ((msg_type & 0x3E00) >> 2);
 
     auto ptr = new StunPacket;
+    ptr->hdr.prefix = hdr->prefix;
+    ptr->hdr.msg_type = hdr->msg_type;
+    ptr->hdr.msg_len = rtc::HostToNetwork16(hdr->msg_len);
+    memcpy(ptr->hdr.trans_id, hdr->trans_id, sizeof(hdr->trans_id));
+    ptr->hdr.msg_cookie = hdr->msg_cookie;
+
     ptr->cls = static_cast<STUN_CLASS_ENUM>(msg_class);
     ptr->method = static_cast<STUN_METHOD_ENUM>(msg_method);
     ptr->parse_attri(data, len);
@@ -99,6 +105,11 @@ StunPacket* StunPacket::parse(const uint8_t* data, size_t len)
 | Value (variable) ....
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 */
+
+void StunPacket::add_attribute(std::shared_ptr<StunAttribute> ptr)
+{
+    _attris.push_back(ptr);
+}
 
 bool StunPacket::validate_fingerprint(const uint8_t* data, size_t len)
 {
@@ -181,12 +192,7 @@ void StunPacket::parse_attri(const uint8_t* data, size_t len)
             ptr->len = flen;
             ptr->type = type;
             std::string str = std::string((const char*)attri_start + pos + 4, flen);
-            uint16_t real_len = flen;
-            if (flen % 4 != 0)
-            {
-                uint16_t ret = flen / 4;
-                real_len = (ret + 1) * 4;
-            }
+            uint16_t real_len = get_real_len(flen);
             //指针移动
             pos += (real_len + 4); //内容长度占用+头部长度
             std::vector<std::string> vecs;
@@ -209,17 +215,133 @@ void StunPacket::parse_attri(const uint8_t* data, size_t len)
             pos += (ptr->len + 4);
             _attris.push_back(ptr);
         }
+        else if (type == STUN_ICE_CONTROLLING)
+        {
+            auto ptr = std::make_shared<StunAttributeIceControlling>();
+            ptr->len = flen;
+            ptr->type = type;
+            ptr->text = std::string((const char*)attri_start + pos + 4, flen);
+            int real_len = get_real_len(ptr->len);
+            pos += (real_len + 4);
+            _attris.push_back(ptr);
+        }
+        else if (type == STUN_USE_CANDIDATE)
+        {
+            auto ptr = std::make_shared<StunAttributePriority>();
+            ptr->len = flen;
+            ptr->type = type;
+            int real_len = get_real_len(ptr->len);
+            pos += (real_len + 4);
+            _attris.push_back(ptr);
+        }
+        else if (type == STUN_PRIORITY)
+        {
+            auto ptr = std::make_shared<StunAttributePriority>();
+            ptr->len = flen;
+            ptr->type = type;
+            ptr->priority = rtc::GetBE32(attri_start + pos + 4);
+            int real_len = get_real_len(ptr->len);
+            pos += (real_len + 4);
+            _attris.push_back(ptr);
+        }
         else
         {
             //未知属性
-            uint16_t real_len = flen;
-            if (flen % 4 != 0)
-            {
-                uint16_t ret = flen / 4;
-                real_len = (ret + 1) * 4;
-            }
+            int real_len = get_real_len(flen);
             //指针移动
             pos += (real_len + 4); //内容长度占用+头部长度
         }
     }
+}
+
+int StunPacket::get_real_len(int len)
+{
+    uint16_t real_len = len;
+    if (len % 4 != 0)
+    {
+        uint16_t ret = len / 4;
+        real_len = (ret + 1) * 4;
+    }
+    return real_len;
+}
+
+void StunPacket::serialize_bind_response(rtc::ByteBufferWriter* wr, const std::string& passwd)
+{
+    int len = 0;
+    wr->WriteBytes((const char*)&hdr, sizeof(hdr));
+    auto ptr = get_attribute(STUN_XOR_MAPPED_ADDRESS);
+    if (ptr)
+    {
+        std::shared_ptr<StunAttributeXorAddress> pptr = std::dynamic_pointer_cast<StunAttributeXorAddress>(ptr);
+        if (pptr)
+        {
+            len += pptr->write(wr);
+        }
+    }
+    //2. 消息完整性
+    stun_header* hdr = (stun_header*)wr->Data();
+    //修改长度用于计算消息完整性
+    hdr->msg_len = rtc::HostToNetwork16(len + 24);
+    char hmac[k_stun_message_integrity_size];
+    size_t ret = rtc::ComputeHmac(rtc::DIGEST_SHA_1, passwd.c_str(),
+        passwd.length(), wr->Data(), len + STUN_HEADER_SIZE, hmac,
+        sizeof(hmac));
+    if (ret == k_stun_message_integrity_size)
+    {
+        auto pptr = std::make_shared<StunAttributeIntegrity>();
+        pptr->type = STUN_MESSAGE_INTEGRITY;
+        pptr->len = 4 + sizeof(k_stun_message_integrity_size);
+        pptr->hmac_sha1 = std::string(hmac, k_stun_message_integrity_size);
+        len += pptr->write(wr);
+    }
+    //3. 指纹
+    //修改长度用于计算指纹，同时这也是最终的长度
+    hdr->msg_len = rtc::HostToNetwork16(len + 8);
+    uint32_t crc32 = rtc::ComputeCrc32(wr->Data(), len);
+    uint32_t crc2 = crc32 ^ STUN_FINGERPRINT_XOR_VALUE;
+    auto pptr = std::make_shared<StunAttributeFingerPrint>();//
+    pptr->len = sizeof(pptr->fp);
+    pptr->type = STUN_FINGERPRINT;
+    pptr->fp = crc2;
+    pptr->write(wr);
+}
+
+std::shared_ptr<StunAttribute> StunPacket::get_attribute(STUN_ATTRIBUTE_ENUM type)
+{
+    for (auto it = _attris.begin(); it != _attris.end(); ++it)
+    {
+        if ((*it)->type == type)
+        {
+            return *it;
+        }
+    }
+    return nullptr;
+}
+
+///////////////////////////////StunAttribute-------------
+
+/*
+0 1 2 3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++ -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| 0 0 0 0 0 0 0 0 | Family | X-Port |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|       X-Address(32 bits or 128 bits)                          |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+*/
+int StunAttributeXorAddress::write(rtc::ByteBufferWriter* wr)
+{
+    wr->WriteUInt16(type);
+    wr->WriteUInt16(len);
+    wr->WriteUInt8(0);
+    wr->WriteUInt8(family);
+    uint16_t port = addr.getPort();
+    wr->WriteUInt16(port ^ (k_stun_magic_cookie >> 16));
+    struct sockaddr_in* addr4 = (struct sockaddr_in*)addr.rawAddressPtr();
+    uint32_t xorip = 0;
+    xorip = addr4->sin_addr.s_addr ^ rtc::HostToNetwork32(k_stun_magic_cookie);
+    wr->WriteBytes((const char*)&xorip, sizeof(xorip));
+    return 8;
 }

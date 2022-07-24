@@ -164,6 +164,9 @@
     <ClCompile Include="udp\ice_connection.cpp">
       <Filter>udp</Filter>
     </ClCompile>
+    <ClCompile Include="rtc_base\byte_buffer.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -345,6 +348,9 @@
     </ClInclude>
     <ClInclude Include="udp\ice_connection.h">
       <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\byte_buffer.h">
+      <Filter>rtc_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
