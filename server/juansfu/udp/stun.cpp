@@ -274,6 +274,7 @@ void StunPacket::serialize_bind_response(rtc::ByteBufferWriter* wr, const std::s
     wr->WriteUInt32(hdr.msg_cookie);
     wr->WriteBytes((const char*)hdr.trans_id, sizeof(hdr.trans_id));
     auto ptr = get_attribute(STUN_XOR_MAPPED_ADDRESS);
+    int wb = wr->Length();
     if (ptr)
     {
         std::shared_ptr<StunAttributeXorAddress> pptr = std::dynamic_pointer_cast<StunAttributeXorAddress>(ptr);
@@ -282,6 +283,7 @@ void StunPacket::serialize_bind_response(rtc::ByteBufferWriter* wr, const std::s
             len += pptr->write(wr);
         }
     }
+    wb = wr->Length();
     //2. 消息完整性
     stun_header* hdr = (stun_header*)wr->Data();
     //修改长度用于计算消息完整性
@@ -294,10 +296,11 @@ void StunPacket::serialize_bind_response(rtc::ByteBufferWriter* wr, const std::s
     {
         auto pptr = std::make_shared<StunAttributeIntegrity>();
         pptr->type = STUN_MESSAGE_INTEGRITY;
-        pptr->len = 4 + sizeof(k_stun_message_integrity_size);
+        pptr->len = k_stun_message_integrity_size;
         pptr->hmac_sha1 = std::string(hmac, k_stun_message_integrity_size);
         len += pptr->write(wr);
     }
+    wb = wr->Length();
     //3. 指纹
     //修改长度用于计算指纹，同时这也是最终的长度
     hdr->msg_len = rtc::HostToNetwork16(len + 8);
@@ -308,6 +311,7 @@ void StunPacket::serialize_bind_response(rtc::ByteBufferWriter* wr, const std::s
     pptr->type = STUN_FINGERPRINT;
     pptr->fp = crc2;
     pptr->write(wr);
+    wb = wr->Length();
 }
 
 std::shared_ptr<StunAttribute> StunPacket::get_attribute(STUN_ATTRIBUTE_ENUM type)
