@@ -3,12 +3,14 @@
 #include <juansfu/utils/global.h>
 #include <juansfu/udp/stun.h>
 #include <juansfu/udp/ice_connection.h>
+#include <juansfu/signaling/port_mgr.h>
 
 void RoomMember::start_recv(const uvcore::IpAddress& addr)
 {
 	using namespace std::placeholders;
 
 	_addr = addr;
+	_addr.parse();
 	udp_receiver = std::make_shared<UdpReceiver>(addr, Global::GetInstance()->get_udp_server());
 	udp_receiver->set_data_cb(std::bind(&RoomMember::on_udp_receive, this, _1, _2));
 	udp_receiver->start();
@@ -17,6 +19,8 @@ void RoomMember::start_recv(const uvcore::IpAddress& addr)
 void RoomMember::stop_recv()
 {
 	udp_receiver->stop();
+	int port = _addr.getPort();
+	UdpPortManager::GetInstance()->recycle_port(port);
 }
 
 void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)

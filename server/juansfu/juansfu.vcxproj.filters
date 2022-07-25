@@ -167,6 +167,9 @@
     <ClCompile Include="rtc_base\byte_buffer.cc">
       <Filter>rtc_base</Filter>
     </ClCompile>
+    <ClCompile Include="signaling\port_mgr.cpp">
+      <Filter>signaling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -351,6 +354,9 @@
     </ClInclude>
     <ClInclude Include="rtc_base\byte_buffer.h">
       <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="signaling\port_mgr.h">
+      <Filter>signaling</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

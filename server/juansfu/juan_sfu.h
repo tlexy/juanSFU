@@ -9,13 +9,14 @@ class WssServer;
 class JuanSfu : public Singleton<JuanSfu>
 {
 public:
-	void init();
+	void init(const char* config_file);
 
-	void start_server(int port);
+	void start_server();
 	void stop_all();
 
 private:
 	std::shared_ptr<WssServer> _server;
+	int _port;
 };
 
 #endif

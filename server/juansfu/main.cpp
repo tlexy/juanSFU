@@ -44,8 +44,8 @@ int main(int argc, char* argv[])
 	//std::cout << "random str24: " << rtc::CreateRandomString(24) << std::endl;
 
 	JuanSfu::Instance();
-	JuanSfu::GetInstance()->init();
-	JuanSfu::GetInstance()->start_server(5000);
+	JuanSfu::GetInstance()->init("webrtc_config.json");
+	JuanSfu::GetInstance()->start_server();
 
 	while (!gstop)
 	{

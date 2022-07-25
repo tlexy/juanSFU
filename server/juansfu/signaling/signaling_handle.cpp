@@ -4,6 +4,7 @@
 #include <juansfu/udp/udp_receiver.h>
 #include <juansfu/utils/global.h>
 #include <juansfu/signaling/room_member.h>
+#include <juansfu/signaling/port_mgr.h>
 
 void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
@@ -115,8 +116,9 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 	bool flag = member->offer_sdp->parse_sdp(vecs);
 	if (flag)
 	{
-		uvcore::IpAddress addr(7000);
-		addr.setIp("192.168.110.59");//127.0.0.1
+		int port = UdpPortManager::GetInstance()->allocate_port();
+		uvcore::IpAddress addr(port);
+		addr.setIp(UdpPortManager::GetInstance()->ipstr);//127.0.0.1
 		RTCOfferAnswerOptions options;
 		options.send_audio = false;
 		options.send_video = false;
