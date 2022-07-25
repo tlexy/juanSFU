@@ -8,10 +8,19 @@ IceConnection::IceConnection(const uvcore::IpAddress& remote_addr, const uvcore:
 	_id = _remote_addr.toString();
 }
 
-void IceConnection::on_udp_data(uvcore::Udp*)
-{}
+void IceConnection::on_udp_data(uvcore::Udp* udp)
+{
+	if (!StunPacket::is_stun(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
+	{
+		return;
+	}
+	StunPacket* sp = StunPacket::parse(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
+	udp->get_inner_buffer()->reset();
 
-void IceConnection::send_binding_response(uvcore::Udp* udp, StunPacket* sp, const std::string& pwd)
+	send_binding_response(udp, sp);
+}
+
+void IceConnection::send_binding_response(uvcore::Udp* udp, StunPacket* sp)
 {
 	//三个属性：STUN_XOR_MAPPED_ADDRESS， STUN_MESSAGE_INTEGRITY， STUN_FINGERPRINT
 	StunPacket* retsp = new StunPacket;
@@ -31,8 +40,13 @@ void IceConnection::send_binding_response(uvcore::Udp* udp, StunPacket* sp, cons
 	retsp->add_attribute(pptr);
 
 	rtc::ByteBufferWriter* writer = new rtc::ByteBufferWriter();
-	retsp->serialize_bind_response(writer, pwd);
+	retsp->serialize_bind_response(writer, _ice_pwd);
 	udp->send2(writer->Data(), writer->Length(), _remote_addr);
+}
+
+void IceConnection::set_ice_pwd(const std::string& pwd)
+{
+	_ice_pwd = pwd;
 }
 
 std::string IceConnection::id() const
