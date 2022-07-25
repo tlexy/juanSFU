@@ -14,6 +14,11 @@ void RoomMember::start_recv(const uvcore::IpAddress& addr)
 	udp_receiver->start();
 }
 
+void RoomMember::stop_recv()
+{
+	udp_receiver->stop();
+}
+
 void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 {
 	if (StunPacket::is_stun(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))

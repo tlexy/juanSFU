@@ -17,7 +17,7 @@ void IceConnection::send_binding_response(uvcore::Udp* udp, StunPacket* sp, cons
 	StunPacket* retsp = new StunPacket;
 	retsp->hdr.msg_type = STUN_BINDING_RESPONSE;
 	retsp->hdr.prefix = 0;
-	retsp->hdr.msg_cookie = rtc::HostToNetwork32(k_stun_magic_cookie);
+	retsp->hdr.msg_cookie = k_stun_magic_cookie;
 	memcpy(retsp->hdr.trans_id, sp->hdr.trans_id, sizeof(sp->hdr.trans_id));
 	retsp->hdr.msg_len = 0;
 

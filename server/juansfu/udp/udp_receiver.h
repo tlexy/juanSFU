@@ -16,9 +16,11 @@ public:
 
 	void set_data_cb(ReceiverDataCb cb);
 	void start();
+	void stop();
 
 private:
 	void on_udp_receive(uvcore::Udp*, const struct sockaddr*);
+	static void deleter(uvcore::Udp*, int64_t);
 
 private:
 	uvcore::IpAddress _addr;

@@ -16,6 +16,7 @@ class RoomMember
 {
 public:
 	void start_recv(const uvcore::IpAddress&);
+	void stop_recv();
 public:
 	std::string uid;
 	std::shared_ptr<SessionDescription> offer_sdp;

@@ -116,7 +116,7 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 	if (flag)
 	{
 		uvcore::IpAddress addr(7000);
-		addr.setIp("192.168.101.40");//127.0.0.1
+		addr.setIp("192.168.110.59");//127.0.0.1
 		RTCOfferAnswerOptions options;
 		options.send_audio = false;
 		options.send_video = false;
@@ -165,7 +165,11 @@ void SignalingHandle::remove(std::shared_ptr<uvcore::TcpConnection> ptr)
 				if (sit->second->id() == ptr->id())
 				{
 					std::cerr << "remove uid: " << sit->first << std::endl;
-					rit->second->members.erase(sit->first);
+					if (rit->second->members.find(sit->first) != rit->second->members.end())
+					{
+						rit->second->members[sit->first]->stop_recv();
+						rit->second->members.erase(sit->first);
+					}
 					rit->second->connections.erase(sit);
 					break;
 				}

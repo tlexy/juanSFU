@@ -34,3 +34,13 @@ void UdpReceiver::on_udp_receive(uvcore::Udp* udp, const struct sockaddr* addr)
 		_data_cb(udp, ipaddr);
 	}
 }
+
+void UdpReceiver::stop()
+{
+	_udp->close(std::bind(&UdpReceiver::deleter, _udp, std::placeholders::_1));
+}
+
+void UdpReceiver::deleter(uvcore::Udp* udp, int64_t)
+{
+	delete udp;
+}
