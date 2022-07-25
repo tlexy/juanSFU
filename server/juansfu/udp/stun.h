@@ -106,6 +106,7 @@ class StunAttributeIntegrity
 public:
     size_t endpos;//计算Integrity的截止位置
     std::string hmac_sha1;
+    virtual int write(rtc::ByteBufferWriter* writer);
 };
 
 class StunAttributeIceControlling
@@ -132,6 +133,7 @@ class StunAttributeFingerPrint
 {
 public:
     uint32_t fp;
+    virtual int write(rtc::ByteBufferWriter* writer);
 };
 
 class StunAttributeXorAddress

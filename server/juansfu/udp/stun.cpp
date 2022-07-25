@@ -268,7 +268,11 @@ int StunPacket::get_real_len(int len)
 void StunPacket::serialize_bind_response(rtc::ByteBufferWriter* wr, const std::string& passwd)
 {
     int len = 0;
-    wr->WriteBytes((const char*)&hdr, sizeof(hdr));
+    //wr->WriteBytes((const char*)&hdr, sizeof(hdr));
+    wr->WriteUInt16(STUN_BINDING_RESPONSE);
+    wr->WriteUInt16(len);
+    wr->WriteUInt32(hdr.msg_cookie);
+    wr->WriteBytes((const char*)hdr.trans_id, sizeof(hdr.trans_id));
     auto ptr = get_attribute(STUN_XOR_MAPPED_ADDRESS);
     if (ptr)
     {
@@ -343,5 +347,21 @@ int StunAttributeXorAddress::write(rtc::ByteBufferWriter* wr)
     uint32_t xorip = 0;
     xorip = addr4->sin_addr.s_addr ^ rtc::HostToNetwork32(k_stun_magic_cookie);
     wr->WriteBytes((const char*)&xorip, sizeof(xorip));
+    return 4 + 8;
+}
+
+int StunAttributeIntegrity::write(rtc::ByteBufferWriter* wr)
+{
+    wr->WriteUInt16(type);
+    wr->WriteUInt16(len);
+    wr->WriteBytes(hmac_sha1.c_str(), hmac_sha1.size());
+    return 4 + hmac_sha1.size();
+}
+
+int StunAttributeFingerPrint::write(rtc::ByteBufferWriter* wr)
+{
+    wr->WriteUInt16(type);
+    wr->WriteUInt16(len);
+    wr->WriteUInt32(fp);
     return 8;
 }
