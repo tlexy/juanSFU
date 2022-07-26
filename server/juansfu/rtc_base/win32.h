@@ -11,6 +11,8 @@
 #ifndef RTC_BASE_WIN32_H_
 #define RTC_BASE_WIN32_H_
 
+#ifndef WEBRTC_POSIX
+
 #ifndef WEBRTC_WIN
 #error "Only #include this header in Windows builds"
 #endif
@@ -44,5 +46,7 @@ const char* win32_inet_ntop(int af, const void* src, char* dst, socklen_t size);
 int win32_inet_pton(int af, const char* src, void* dst);
 
 }  // namespace rtc
+
+#endif
 
 #endif  // RTC_BASE_WIN32_H_

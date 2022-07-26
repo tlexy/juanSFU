@@ -8,6 +8,8 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
+#ifndef WEBRTC_POSIX
+
 #include "rtc_base/win32.h"
 
 #include <winsock2.h>
@@ -312,3 +314,5 @@ int inet_pton_v6(const char* src, void* dst) {
 }
 
 }  // namespace rtc
+
+#endif
