@@ -6,6 +6,8 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/)
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_definitions(-DWEBRTC_POSIX)
+
 # SET(CMAKE_C_FLAGS "-std=c11 -O2 -W -w")
 # SET(CMAKE_CXX_FLAGS "-std=c++11 -W -w")
 # set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -g -ggdb")
@@ -32,8 +34,9 @@ link_directories(${LIBUV_LIBRARY_DIRS})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 include_directories(/usr/local/include)
-include_directories(${CMAKE_SOURCE_DIR}/../)
-include_directories(${CMAKE_SOURCE_DIR}/../uvnet)
+include_directories(${CMAKE_SOURCE_DIR}/..)
+include_directories(${CMAKE_SOURCE_DIR}/../../..)
+include_directories(${CMAKE_SOURCE_DIR}/../../../uvnet)
 
 # add_subdirectory(${CMAKE_SOURCE_DIR}/pActor)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/genernal)
