@@ -36,12 +36,13 @@ void IceConnection::send_binding_response(uvcore::Udp* udp, StunPacket* sp)
 	pptr->family = 0x01;
 	pptr->len = 8;
 	pptr->type = STUN_XOR_MAPPED_ADDRESS;
-	pptr->addr = _local_addr;
+	pptr->addr = _remote_addr;
 	retsp->add_attribute(pptr);
 
 	rtc::ByteBufferWriter* writer = new rtc::ByteBufferWriter();
 	retsp->serialize_bind_response(writer, _ice_pwd);
 	udp->send2(writer->Data(), writer->Length(), _remote_addr);
+	delete writer;
 }
 
 void IceConnection::set_ice_pwd(const std::string& pwd)
