@@ -64,7 +64,7 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 			ss << it->first << "=" << it->second;
 			if (++it != ptr->fmtps[i].params.end())
 			{
-				ss << ",";
+				ss << ";";
 			}
 			else
 			{
