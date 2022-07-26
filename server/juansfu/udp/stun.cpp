@@ -304,7 +304,7 @@ void StunPacket::serialize_bind_response(rtc::ByteBufferWriter* wr, const std::s
     //3. 指纹
     //修改长度用于计算指纹，同时这也是最终的长度
     hdr->msg_len = rtc::HostToNetwork16(len + 8);
-    uint32_t crc32 = rtc::ComputeCrc32(wr->Data(), len);
+    uint32_t crc32 = rtc::ComputeCrc32(wr->Data(), wr->Length());
     uint32_t crc2 = crc32 ^ STUN_FINGERPRINT_XOR_VALUE;
     auto pptr = std::make_shared<StunAttributeFingerPrint>();//
     pptr->len = sizeof(pptr->fp);
