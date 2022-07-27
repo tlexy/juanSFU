@@ -118,7 +118,8 @@ ThreadManager* ThreadManager::Instance() {
 
 ThreadManager::~ThreadManager() {
   // By above RTC_DEFINE_STATIC_LOCAL.
-  RTC_DCHECK_NOTREACHED() << "ThreadManager should never be destructed.";
+  //RTC_DCHECK_NOTREACHED() << "ThreadManager should never be destructed.";
+    printf("ThreadManager should never be destructed.\n");
 }
 
 // static
@@ -812,8 +813,9 @@ void Thread::UnwrapCurrent() {
 #if defined(WEBRTC_WIN)
   if (thread_ != nullptr) {
     if (!CloseHandle(thread_)) {
-      RTC_LOG_GLE(LS_ERROR)
-          << "When unwrapping thread, failed to close handle.";
+     /* RTC_LOG_GLE(LS_ERROR)
+          << "When unwrapping thread, failed to close handle.";*/
+        printf("When unwrapping thread, failed to close handle.\n");
     }
     thread_ = nullptr;
     thread_id_ = 0;
@@ -1161,7 +1163,8 @@ bool Thread::WrapCurrentWithThreadManager(ThreadManager* thread_manager,
     // This gives us the best chance of succeeding.
     thread_ = OpenThread(SYNCHRONIZE, FALSE, GetCurrentThreadId());
     if (!thread_) {
-      RTC_LOG_GLE(LS_ERROR) << "Unable to get handle to thread.";
+      //RTC_LOG_GLE(LS_ERROR) << "Unable to get handle to thread.";
+        printf("Unable to get handle to thread.\n");
       return false;
     }
     thread_id_ = GetCurrentThreadId();

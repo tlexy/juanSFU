@@ -11,6 +11,8 @@
 #ifndef RTC_BASE_CHECKS_H_
 #define RTC_BASE_CHECKS_H_
 
+//#define RTC_DCHECK_NOTREACHED
+
 // If you for some reson need to know if DCHECKs are on, test the value of
 // RTC_DCHECK_IS_ON. (Test its value, not if it's defined; it'll always be
 // defined, to either a true or a false value.)

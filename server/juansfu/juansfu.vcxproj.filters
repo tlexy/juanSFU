@@ -48,6 +48,42 @@
     <Filter Include="rtc_base\sigslot">
       <UniqueIdentifier>{30c6e74c-b445-4d95-ab35-dcb955bdfc39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="api\task_queue">
+      <UniqueIdentifier>{92219230-427e-4063-8f7a-0de084096391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\task_utils">
+      <UniqueIdentifier>{fab12b23-be53-44db-a027-dc0b4a1f917f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\deprecated">
+      <UniqueIdentifier>{da6e3a75-bc5b-42b4-978e-58c218285731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\internal">
+      <UniqueIdentifier>{72ae337e-242d-4568-a01e-59990b89d486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\synchronization">
+      <UniqueIdentifier>{e6b2f2a9-18d9-4b7b-a9de-2c3705d8f8b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api\units">
+      <UniqueIdentifier>{a08895f2-dded-4308-8741-cd5c06ea9e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\units">
+      <UniqueIdentifier>{a6f60059-9880-4acd-b9ce-be57763a93ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system_wrappers">
+      <UniqueIdentifier>{d4f5f5fa-32ad-4b4a-ac94-0207e9010fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system_wrappers\include">
+      <UniqueIdentifier>{6df7e1f4-dcb1-4371-992f-751bf91cba28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system_wrappers\source">
+      <UniqueIdentifier>{31e7219b-2e60-46ed-be5c-1a407e8b7279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="module">
+      <UniqueIdentifier>{7af56424-2070-4938-bcdf-96fae8951beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="module\include">
+      <UniqueIdentifier>{92c3178b-0930-4517-9e3e-f647a5c62211}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -192,6 +228,126 @@
       <Filter>rtc_base\sigslot</Filter>
     </ClCompile>
     <ClCompile Include="rtc_base\thread.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="api\task_queue\task_queue_base.cc">
+      <Filter>api\task_queue</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\location.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\socket.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\platform_thread_types.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\deprecated\recursive_critical_section.cc">
+      <Filter>rtc_base\deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\event.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\null_socket_server.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\internal\default_socket_server.cc">
+      <Filter>rtc_base\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\synchronization\yield.cc">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\synchronization\yield_policy.cc">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\physical_socket_server.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\task_utils\pending_task_safety_flag.cc">
+      <Filter>rtc_base\task_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\async_invoker.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\synchronization\sequence_checker_internal.cc">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\async_resolver.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\system\warn_current_thread_is_deadlocked.cc">
+      <Filter>rtc_base\system</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\synchronization\mutex.cc">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\async_resolver_interface.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\event_tracer.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\platform_thread.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\network_monitor.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\task_queue.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\network_constants.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_stream_adapter.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\task_utils\repeating_task.cc">
+      <Filter>rtc_base\task_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="api\units\time_delta.cc">
+      <Filter>api\units</Filter>
+    </ClCompile>
+    <ClCompile Include="api\units\timestamp.cc">
+      <Filter>api\units</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\clock.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\cpu_features.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\cpu_features_linux.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\cpu_info.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\denormal_disabler.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\field_trial.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\metrics.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\rtp_to_ntp_estimator.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="system_wrappers\source\sleep.cc">
+      <Filter>system_wrappers\source</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_adapter.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\openssl_session_cache.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\ssl_adapter.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\async_socket.cc">
       <Filter>rtc_base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -408,6 +564,177 @@
     </ClInclude>
     <ClInclude Include="rtc_base\thread_annotations.h">
       <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="api\task_queue\queued_task.h">
+      <Filter>api\task_queue</Filter>
+    </ClInclude>
+    <ClInclude Include="api\task_queue\task_queue_base.h">
+      <Filter>api\task_queue</Filter>
+    </ClInclude>
+    <ClInclude Include="api\task_queue\task_queue_factory.h">
+      <Filter>api\task_queue</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\thread_message.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\socket_server.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\location.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\socket_factory.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\socket.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\platform_thread_types.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\task_utils\to_queued_task.h">
+      <Filter>rtc_base\task_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\deprecated\recursive_critical_section.h">
+      <Filter>rtc_base\deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\atomic_ops.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\event.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\trace_event.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\null_socket_server.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\internal\default_socket_server.h">
+      <Filter>rtc_base\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\synchronization\yield.h">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\synchronization\yield_policy.h">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\physical_socket_server.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\task_utils\pending_task_safety_flag.h">
+      <Filter>rtc_base\task_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\async_invoker.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\system\unused.h">
+      <Filter>rtc_base\system</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\synchronization\sequence_checker_internal.h">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\async_invoker_inl.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\async_resolver.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\system\warn_current_thread_is_deadlocked.h">
+      <Filter>rtc_base\system</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\synchronization\mutex.h">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\synchronization\mutex_abseil.h">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\synchronization\mutex_critical_section.h">
+      <Filter>rtc_base\synchronization</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\system\no_unique_address.h">
+      <Filter>rtc_base\system</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\async_resolver_interface.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\event_tracer.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\platform_thread.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\network_monitor.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\task_queue.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\network_constants.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_stream_adapter.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\task_utils\repeating_task.h">
+      <Filter>rtc_base\task_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="api\units\time_delta.h">
+      <Filter>api\units</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\units\unit_base.h">
+      <Filter>rtc_base\units</Filter>
+    </ClInclude>
+    <ClInclude Include="api\units\timestamp.h">
+      <Filter>api\units</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\clock.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\cpu_features_wrapper.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\cpu_info.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\denormal_disabler.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\field_trial.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\metrics.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\ntp_time.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\rtp_to_ntp_estimator.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="system_wrappers\include\sleep.h">
+      <Filter>system_wrappers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_adapter.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\openssl_session_cache.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ssl_adapter.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\async_socket.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\include\module_common_types_public.h">
+      <Filter>module\include</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\numerics\moving_median_filter.h">
+      <Filter>rtc_base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\numerics\percentile_filter.h">
+      <Filter>rtc_base\numerics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

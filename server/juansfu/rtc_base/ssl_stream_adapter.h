@@ -21,7 +21,7 @@
 #include "rtc_base/ssl_certificate.h"
 #include "rtc_base/ssl_identity.h"
 #include "rtc_base/stream.h"
-#include "rtc_base/third_party/sigslot/sigslot.h"
+#include "rtc_base/sigslot/sigslot.h"
 
 namespace rtc {
 
