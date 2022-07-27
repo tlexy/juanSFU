@@ -9,8 +9,8 @@ const static std::string k_media_proto_savpf = "RTP/SAVPF";
 
 SessionDescription::SessionDescription()
 {
-	_video_sup.name = "video";
-	_audio_sup.name = "audio";
+	video_sup.name = "video";
+	audio_sup.name = "audio";
 }
 
 std::string SessionDescription::to_string()
@@ -247,6 +247,7 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options, con
 bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 {
 	bool flag = false;
+	std::shared_ptr<MediaContent> ptr = nullptr;
 	for (int i = 0; i < vecs.size(); ++i)
 	{
 		if (vecs[i].find("v=") != std::string::npos)
@@ -259,11 +260,19 @@ bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 		}
 		else if (vecs[i].find("m=") != std::string::npos)
 		{
-			flag = parse_media(vecs[i]);
+			ptr = parse_media(vecs[i]);
+			if (!ptr)
+			{
+				flag = false;
+			}
 		}
 		else if (vecs[i].find("a=rtpmap") != std::string::npos)
 		{
 			flag = parse_rtpmap(vecs[i]);
+		}
+		else if (vecs[i].find("a=fingerprint:") != std::string::npos && ptr)
+		{
+			flag = parse_dtls(ptr, vecs[i]);
 		}
 
 		if (!flag)
@@ -306,20 +315,20 @@ bool SessionDescription::parse_origin(const std::string& sdp)
 	return true;
 }
 
-bool SessionDescription::parse_media(const std::string& sdp)
+std::shared_ptr<MediaContent> SessionDescription::parse_media(const std::string& sdp)
 {
 	std::vector<std::string> vecs;
 	SUtil::split(sdp, "=", vecs);
 	if (vecs.size() != 2)
 	{
-		return false;
+		return nullptr;
 	}
 
 	std::vector<std::string> vecs2;
 	SUtil::split(vecs[1], " ", vecs2);
 	if (vecs2.size() < 4)
 	{
-		return false;
+		return nullptr;
 	}
 
 	MediaCodecSupport sup;
@@ -334,7 +343,7 @@ bool SessionDescription::parse_media(const std::string& sdp)
 	}
 	else
 	{
-		return false;
+		return nullptr;
 	}
 	for (int i = 3; i < vecs2.size(); ++i)
 	{
@@ -345,17 +354,22 @@ bool SessionDescription::parse_media(const std::string& sdp)
 	//
 	if (vecs2[0] == "video")
 	{
-		_video_sup = sup;
+		video_sup = sup;
+		auto ptr = std::make_shared<VideoContentDesc>();
+		media_contents.push_back(ptr);
+		return ptr;
 	}
 	else if (vecs2[0] == "audio")
 	{
-		_audio_sup = sup;
+		audio_sup = sup;
+		auto ptr = std::make_shared<AudioContentDesc>();
+		media_contents.push_back(ptr);
+		return ptr;
 	}
 	else
 	{
-		return false;
+		return nullptr;
 	}
-	return true;
 }
 
 bool SessionDescription::parse_rtpmap(const std::string& sdp)
@@ -380,18 +394,39 @@ bool SessionDescription::parse_rtpmap(const std::string& sdp)
 	}
 	std::string sid = vecs2[0].substr(pos + 1);
 	int id = std::atoi(sid.c_str());
-	auto it = _video_sup.codec_ids.find(id);
-	if (it != _video_sup.codec_ids.end())
+	auto it = video_sup.codec_ids.find(id);
+	if (it != video_sup.codec_ids.end())
 	{
 		it->second.desc = vecs2[1];
 		return true;
 	}
 
-	it = _audio_sup.codec_ids.find(id);
-	if (it != _audio_sup.codec_ids.end())
+	it = audio_sup.codec_ids.find(id);
+	if (it != audio_sup.codec_ids.end())
 	{
 		it->second.desc = vecs2[1];
 	}
+	return true;
+}
+
+bool SessionDescription::parse_dtls(std::shared_ptr<MediaContent> ptr, const std::string& sdp)
+{
+	//a=fingerprint:sha-256 41:C6:B2:93:72:A6:10:2A:B5:F3:71:22:89:8B:90:34:41:E7:2A:EC:4D:E0:D2:76:B5:5A:D1:78:11:37:A6:67
+	size_t pos = sdp.find(":");
+	if (pos == std::string::npos)
+	{
+		return false;
+	}
+	std::string param = sdp.substr(pos + 1);
+	std::vector<std::string> vecs;
+	SUtil::split(param, " ", vecs);
+	if (vecs.size() != 2)
+	{
+		return false;
+	}
+	ptr->dtls = std::make_shared<DtlsParameter>();
+	ptr->dtls->alg = vecs[0];
+	ptr->dtls->finger_print = vecs[1];
 	return true;
 }
 

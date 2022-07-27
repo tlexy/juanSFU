@@ -95,6 +95,13 @@ public:
 	std::string passwd;
 };
 
+struct DtlsParameter
+{
+public:
+	std::string alg;
+	std::string finger_print;
+};
+
 class MediaContent {
 public:
 	virtual ~MediaContent() {}
@@ -113,6 +120,7 @@ public:
 	IceParameter ice;
 	std::string connection_role;
 	std::vector<std::shared_ptr<IceCandidate>> cands;
+	std::shared_ptr<DtlsParameter> dtls = nullptr;
 };
 
 class AudioContentDesc : public MediaContent {
@@ -142,12 +150,14 @@ public:
 	std::string to_string();
 
 public:
+	//会话级别
 	SessionSdp session;
+	//媒体级别
 	std::vector<std::shared_ptr<MediaContent>> media_contents;
+	MediaCodecSupport video_sup;
+	MediaCodecSupport audio_sup;
 
 private:
-	MediaCodecSupport _video_sup;
-	MediaCodecSupport _audio_sup;
 	std::unique_ptr<rtc::SSLFingerprint> _fingerprint;
 	uvcore::IpAddress _addr;
 
@@ -158,8 +168,9 @@ private:
 private:
 	bool parse_version(const std::string&);
 	bool parse_origin(const std::string&);
-	bool parse_media(const std::string&);
+	std::shared_ptr<MediaContent> parse_media(const std::string&);
 	bool parse_rtpmap(const std::string&);
+	bool parse_dtls(std::shared_ptr<MediaContent> ptr, const std::string& sdp);
 };
 
 #endif

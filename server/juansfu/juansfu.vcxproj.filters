@@ -170,6 +170,9 @@
     <ClCompile Include="signaling\port_mgr.cpp">
       <Filter>signaling</Filter>
     </ClCompile>
+    <ClCompile Include="udp\rtc_dtls.cpp">
+      <Filter>udp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -357,6 +360,9 @@
     </ClInclude>
     <ClInclude Include="signaling\port_mgr.h">
       <Filter>signaling</Filter>
+    </ClInclude>
+    <ClInclude Include="udp\rtc_dtls.h">
+      <Filter>udp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
