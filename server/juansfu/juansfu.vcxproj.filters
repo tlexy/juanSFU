@@ -42,6 +42,12 @@
     <Filter Include="udp">
       <UniqueIdentifier>{85caba83-8751-4840-a0f5-1a2dfedd88a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rtprtcp">
+      <UniqueIdentifier>{9717e88c-5c33-4136-8bda-5a555e050d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtc_base\sigslot">
+      <UniqueIdentifier>{30c6e74c-b445-4d95-ab35-dcb955bdfc39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -172,6 +178,21 @@
     </ClCompile>
     <ClCompile Include="udp\rtc_dtls.cpp">
       <Filter>udp</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\ssl_stream_adapter.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\stream.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\message_handler.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\sigslot\sigslot.cc">
+      <Filter>rtc_base\sigslot</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\thread.cc">
+      <Filter>rtc_base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -363,6 +384,30 @@
     </ClInclude>
     <ClInclude Include="udp\rtc_dtls.h">
       <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="rtprtcp\rtprtcp_pub.hpp">
+      <Filter>rtprtcp</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\ssl_stream_adapter.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\stream.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\message_handler.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="api\function_view.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\sigslot\sigslot.h">
+      <Filter>rtc_base\sigslot</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\thread.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\thread_annotations.h">
+      <Filter>rtc_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
