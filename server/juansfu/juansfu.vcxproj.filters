@@ -84,6 +84,9 @@
     <Filter Include="module\include">
       <UniqueIdentifier>{92c3178b-0930-4517-9e3e-f647a5c62211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="api\crypto">
+      <UniqueIdentifier>{7068f464-1dd1-4e82-8cd0-c22175243065}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -349,6 +352,12 @@
     </ClCompile>
     <ClCompile Include="rtc_base\async_socket.cc">
       <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\buffer_queue.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
+    <ClCompile Include="api\crypto\crypto_options.cc">
+      <Filter>api\crypto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -735,6 +744,12 @@
     </ClInclude>
     <ClInclude Include="rtc_base\numerics\percentile_filter.h">
       <Filter>rtc_base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\buffer_queue.h">
+      <Filter>rtc_base</Filter>
+    </ClInclude>
+    <ClInclude Include="api\crypto\crypto_options.h">
+      <Filter>api\crypto</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

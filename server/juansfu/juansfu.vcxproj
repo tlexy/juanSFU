@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="api\crypto\crypto_options.cc" />
     <ClCompile Include="api\task_queue\task_queue_base.cc" />
     <ClCompile Include="api\units\timestamp.cc" />
     <ClCompile Include="api\units\time_delta.cc" />
@@ -153,6 +154,7 @@
     <ClCompile Include="rtc_base\async_resolver_interface.cc" />
     <ClCompile Include="rtc_base\async_socket.cc" />
     <ClCompile Include="rtc_base\base64\base64.cc" />
+    <ClCompile Include="rtc_base\buffer_queue.cc" />
     <ClCompile Include="rtc_base\byte_buffer.cc" />
     <ClCompile Include="rtc_base\checks.cc" />
     <ClCompile Include="rtc_base\copy_on_write_buffer.cc" />
@@ -234,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="api\array_view.h" />
+    <ClInclude Include="api\crypto\crypto_options.h" />
     <ClInclude Include="api\function_view.h" />
     <ClInclude Include="api\scoped_refptr.h" />
     <ClInclude Include="api\task_queue\queued_task.h" />
@@ -252,6 +255,7 @@
     <ClInclude Include="rtc_base\atomic_ops.h" />
     <ClInclude Include="rtc_base\base64\base64.h" />
     <ClInclude Include="rtc_base\buffer.h" />
+    <ClInclude Include="rtc_base\buffer_queue.h" />
     <ClInclude Include="rtc_base\byte_buffer.h" />
     <ClInclude Include="rtc_base\byte_order.h" />
     <ClInclude Include="rtc_base\checks.h" />
