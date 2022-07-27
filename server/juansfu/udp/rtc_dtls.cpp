@@ -135,6 +135,7 @@ bool RtcDtls::setup_dtls()
 		std::cerr << ": Not using DTLS-SRTP" << std::endl;
 		return false;
 	}
+	return true;
 }
 
 void RtcDtls::handle_dtls(const uint8_t* data, size_t len)
