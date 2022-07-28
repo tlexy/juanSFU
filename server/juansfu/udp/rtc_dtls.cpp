@@ -60,8 +60,8 @@ void DtlsStreamInterface::Close()
 
 bool DtlsStreamInterface::on_packet_receive(const uint8_t* data, size_t len)
 {
-	size_t written_bytes;
-	bool flag = _que.WriteBack(data, len, &written_bytes);
+	//size_t written_bytes = 0;;
+	bool flag = _que.WriteBack(data, len, NULL);
 	if (!flag)
 	{
 		std::cerr << "write to dtls error." << std::endl;
