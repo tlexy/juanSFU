@@ -3,6 +3,7 @@
 #include <juansfu/utils/global.h>
 #include <juansfu/udp/stun.h>
 #include <juansfu/udp/ice_connection.h>
+#include <juansfu/udp/rtc_dtls.h>
 #include <juansfu/signaling/port_mgr.h>
 #include <juansfu/udp/rtc_dtls.h>
 #include <juansfu/rtprtcp/rtprtcp_pub.hpp>
@@ -68,6 +69,35 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 	}
 	else if (RtcDtls::is_dtls(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
+		auto it = dtls_connections.find(addr.toString());
+		if (it == dtls_connections.end())
+		{
+			if (offer_sdp->media_contents[0]->dtls->identity_fp)
+			{
+				auto ptr = std::make_shared<RtcDtls>(udp, addr);
+				ptr->set_remote_dtls(offer_sdp->media_contents[0]->dtls->identity_fp->algorithm,
+					offer_sdp->media_contents[0]->dtls->identity_fp->digest.cdata(),
+					offer_sdp->media_contents[0]->dtls->identity_fp->digest.size());
+				bool flag = ptr->setup_dtls();
+				if (flag)
+				{
+					dtls_connections[addr.toString()] = ptr;
+					it = dtls_connections.find(addr.toString());
+				}
+				else
+				{
+					std::cerr << "dtls setup failed." << std::endl;
+				}
+			}
+			else
+			{
+				std::cerr << "remote digest is empty." << std::endl;
+			}
+		}
+		if (it != dtls_connections.end())
+		{
+			it->second->handle_dtls(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
+		}
 	}
 	else
 	{

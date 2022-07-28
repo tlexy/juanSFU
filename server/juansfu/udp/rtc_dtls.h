@@ -34,7 +34,7 @@ private:
 
 };
 
-class RtcDtls
+class RtcDtls : public sigslot::has_slots<>
 {
 public:
     enum class DtlsTransportState {
@@ -49,17 +49,24 @@ public:
 	static bool is_dtls(const uint8_t* data, size_t len);
     static bool is_dtls_client_hello_packet(const uint8_t* data, size_t len);
 
-    void set_remote_dtls(const std::string& alg, const std::string& fp);
+    void set_remote_dtls(const std::string& alg, const uint8_t* digest, size_t digest_len);
     bool setup_dtls();
     void handle_dtls(const uint8_t* data, size_t len);
 
 private:
+    bool do_handle_dtls_packet(const uint8_t* data, size_t len);
+
+    void slot_dtls_event(rtc::StreamInterface* dtls, int sig, int error);
+    void slot_dtls_handshake_error(rtc::SSLHandshakeError err);
+
+private:
     std::string _remote_alg;
-    std::string _remote_fp;
+    //std::string _remote_fp;
     DtlsTransportState _state = DtlsTransportState::k_new;
     std::unique_ptr<rtc::SSLStreamAdapter> _dtls_adapter;
     DtlsStreamInterface* _downward = nullptr;
     std::vector<int> _srtp_ciphers;
+    rtc::Buffer _remote_fingerprint_value;
 };
 
 #endif

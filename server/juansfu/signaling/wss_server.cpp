@@ -10,10 +10,12 @@ void WssServer::on_newconnection(std::shared_ptr<uvcore::WsConnection> conn)
 {
 	std::cout << "new connection here, id : " << conn->id() << std::endl;
 	_conn_map[conn->id()] = conn;
+	std::cout << "1 thread id: " << std::this_thread::get_id() << std::endl;
 }
 
 void WssServer::on_message(std::shared_ptr<uvcore::WsConnection> ptr)
 {
+	std::cout << "2 thread id: " << std::this_thread::get_id() << std::endl;
 	if (ptr->error() != 0)
 	{
 		ptr->close();
@@ -38,7 +40,7 @@ void WssServer::on_message(std::shared_ptr<uvcore::WsConnection> ptr)
 void WssServer::on_connection_close(std::shared_ptr<uvcore::WsConnection> ptr)
 {
 	std::cout << "connection close." << std::endl;
-
+	std::cout << "3 thread id: " << std::this_thread::get_id() << std::endl;
 	SignalingHandle::GetInstance()->remove(ptr);
 	_conn_map.erase(ptr->id());
 }

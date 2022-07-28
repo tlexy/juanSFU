@@ -100,6 +100,7 @@ struct DtlsParameter
 public:
 	std::string alg;
 	std::string finger_print;
+	std::unique_ptr<rtc::SSLFingerprint> identity_fp = nullptr;
 };
 
 class MediaContent {

@@ -60,7 +60,7 @@ StunPacket* StunPacket::parse(const uint8_t* data, size_t len)
     }
 
     bool flag = validate_fingerprint(data, len);
-    std::cout << "validate_fingerprint: " << flag << std::endl;
+    //std::cout << "validate_fingerprint: " << flag << std::endl;
     if (!flag)
     {
         return nullptr;

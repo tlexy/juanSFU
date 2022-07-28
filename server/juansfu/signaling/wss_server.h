@@ -6,6 +6,7 @@
 #include <websocket/ws_connection.h>
 #include <websocket/ws_general_server.h>
 #include <unordered_map>
+#include <thread>
 
 class WssServer : public uvcore::WsGeneralServer
 {

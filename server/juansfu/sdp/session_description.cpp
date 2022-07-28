@@ -273,6 +273,10 @@ bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 		else if (vecs[i].find("a=fingerprint:") != std::string::npos && ptr)
 		{
 			flag = parse_dtls(ptr, vecs[i]);
+			if (flag)
+			{
+				ptr->dtls->identity_fp = rtc::SSLFingerprint::CreateUniqueFromRfc4572(ptr->dtls->alg, ptr->dtls->finger_print);
+			}
 		}
 
 		if (!flag)
