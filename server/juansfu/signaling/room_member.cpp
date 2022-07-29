@@ -43,6 +43,7 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 {
 	if (StunPacket::is_stun(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
+		std::cout << "stun from: " << addr.toString() << std::endl;
 		auto it = ice_connections.find(addr.toString());
 		if (it != ice_connections.end())
 		{

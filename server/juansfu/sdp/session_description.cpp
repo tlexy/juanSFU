@@ -116,6 +116,16 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 			<< " typ " << ptr->cands[i]->type
 			<< "\r\n";
 	}
+
+	for (int i = 0; i < ptr->ssrc_groups.size(); ++i)
+	{
+		ss << "a=ssrc-group:" << ptr->ssrc_groups[i].semantic;
+		for (int j = 0; j < ptr->ssrc_groups[i].ssrcs.size(); ++j)
+		{
+			ss << " " << ptr->ssrc_groups[i].ssrcs[j];
+		}
+		ss << "\r\n";
+	}
 	for (int i = 0; i < ptr->ssrcs.size(); ++i)
 	{
 		ss << "a=ssrc:" << ptr->ssrcs[i].ssrc << " " << ptr->ssrcs[i].attri;
@@ -157,7 +167,7 @@ void SessionDescription::build(std::shared_ptr<SessionDescription> sdp)
 
 void SessionDescription::set_peer_sdp(std::shared_ptr<SessionDescription> sdp)
 {
-	offer_sdp = sdp;
+	_peer_offer_sdp = sdp;
 }
 
 std::shared_ptr<MediaContent> SessionDescription::get_media_content(MediaType mt)
@@ -214,9 +224,9 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options, con
 	fp.params["useinbandfec"] = "1";
 	audioptr->fmtps.push_back(fp);
 
-	if (offer_sdp)
+	if (_peer_offer_sdp)
 	{
-		auto offer_a = offer_sdp->get_media_content(MediaType::MEDIA_TYPE_AUDIO);
+		auto offer_a = _peer_offer_sdp->get_media_content(MediaType::MEDIA_TYPE_AUDIO);
 		if (options.send_audio && offer_a)
 		{
 			audioptr->ssrcs = offer_a->ssrcs;
@@ -250,6 +260,16 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options, con
 	fp.params.clear();
 	fp.params["apt"] = "108";
 	vptr->fmtps.push_back(fp);
+
+	if (_peer_offer_sdp)
+	{
+		auto offer_v = _peer_offer_sdp->get_media_content(MediaType::MEDIA_TYPE_VIDEO);
+		if (options.send_video && offer_v)
+		{
+			vptr->ssrcs = offer_v->ssrcs;
+			vptr->ssrc_groups = offer_v->ssrc_groups;
+		}
+	}
 
 	std::string ufrag = rtc::CreateRandomString(4);
 	std::string passwd = rtc::CreateRandomString(24);

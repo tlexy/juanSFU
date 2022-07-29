@@ -179,7 +179,7 @@ private:
 	uvcore::IpAddress _addr;
 
 	//peer offer sdp
-	std::shared_ptr<SessionDescription> offer_sdp;
+	std::shared_ptr<SessionDescription> _peer_offer_sdp = nullptr;
 
 private:
 	void add_media_content(std::stringstream&, std::shared_ptr<MediaContent>);
