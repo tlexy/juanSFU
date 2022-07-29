@@ -38,6 +38,8 @@ private:
 	std::shared_ptr<Room> find_room(int64_t roomid);
 	std::shared_ptr<Room> create_room(int64_t roomid);
 
+	void print_sdp(const std::vector<std::string>&);
+
 private:
 	std::unordered_map<int64_t, std::shared_ptr<Room>> _all_rooms;
 	std::unordered_map<int64_t, int64_t> _connections;

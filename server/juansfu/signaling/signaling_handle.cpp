@@ -70,6 +70,16 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 	_connections[ptr->id()] = roomid;
 }
 
+void SignalingHandle::print_sdp(const std::vector<std::string>& sdps)
+{
+	std::cout << "SDP START" << std::endl;
+	for (int i = 0; i < sdps.size(); ++i)
+	{
+		std::cout << sdps[i] << std::endl;
+	}
+	std::cout << "SDP END" << std::endl;
+}
+
 void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
 	std::string sroomid = GET_JSON_STRING(msg, "roomId", "");
@@ -103,7 +113,7 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 		return;
 	}
 	std::string sdpstr = sdp.substr(pos + start.size(), sdp.size() - pos - 2 - start.size() - 4);
-	std::cout << "publish uid: " << uid << ", sdp: " << sdpstr << std::endl;
+	//std::cout << "publish uid: " << uid << ", sdp: " << sdpstr << std::endl;
 
 	std::vector<std::string> vecs;
 	SUtil::split(sdpstr, "\\r\\n", vecs);
@@ -112,7 +122,7 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 		std::cerr << "sdp error, roomid: " << roomid << ", uid: " << uid  << ", sdp: " << sdpstr << std::endl;
 		return;
 	}
-
+	print_sdp(vecs);
 	bool flag = member->offer_sdp->parse_sdp(vecs);
 	if (flag)
 	{
@@ -170,6 +180,7 @@ void SignalingHandle::remove(std::shared_ptr<uvcore::TcpConnection> ptr)
 					if (rit->second->members.find(sit->first) != rit->second->members.end())
 					{
 						rit->second->members[sit->first]->stop_recv();
+						//rit->second->members[sit->first]->destory();
 						rit->second->members.erase(sit->first);
 					}
 					rit->second->connections.erase(sit);

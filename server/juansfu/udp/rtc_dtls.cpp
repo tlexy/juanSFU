@@ -89,6 +89,12 @@ RtcDtls::RtcDtls(uvcore::Udp* udp, const uvcore::IpAddress& remote_addr)
 	_srtp_ciphers = crypto_options.GetSupportedDtlsSrtpCryptoSuites();
 }
 
+void RtcDtls::destory()
+{
+	//_dtls_adapter = nullptr;
+	//_downward = nullptr;
+}
+
 bool RtcDtls::is_dtls(const uint8_t* data, size_t len)
 {
 	//https://tools.ietf.org/html/draft-ietf-avtcore-rfc5764-mux-fixes
@@ -277,5 +283,9 @@ bool RtcDtls::do_handle_dtls_packet(const uint8_t* data, size_t len)
 		tmp_size -= k_dtls_record_header_len + record_len;
 	}
 	//std::cout << ""
-	return _downward->on_packet_receive(temp, len);
+	if (_downward)
+	{
+		return _downward->on_packet_receive(temp, len);
+	}
+	return false;
 }

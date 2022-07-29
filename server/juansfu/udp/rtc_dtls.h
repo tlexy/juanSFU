@@ -53,6 +53,8 @@ public:
     bool setup_dtls();
     void handle_dtls(const uint8_t* data, size_t len);
 
+    void destory();
+
 private:
     bool do_handle_dtls_packet(const uint8_t* data, size_t len);
 

@@ -27,6 +27,14 @@ void RoomMember::stop_recv()
 	UdpPortManager::GetInstance()->recycle_port(port);
 }
 
+void RoomMember::destory()
+{
+	for (auto it = dtls_connections.begin(); it != dtls_connections.end(); ++it)
+	{
+		it->second->destory();
+	}
+}
+
 void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 {
 	if (StunPacket::is_stun(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
