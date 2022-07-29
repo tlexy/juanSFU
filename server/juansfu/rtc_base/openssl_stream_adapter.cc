@@ -25,6 +25,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 #include "rtc_base/checks.h"
 #include "rtc_base/logging.h"
@@ -977,6 +978,7 @@ void OpenSSLStreamAdapter::Cleanup(uint8_t alert) {
   }
 
   if (ssl_) {
+      std::cout << "ssl is not null" << std::endl;
     int ret;
 // SSL_send_fatal_alert is only available in BoringSSL.
 #ifdef OPENSSL_IS_BORINGSSL
@@ -997,6 +999,7 @@ void OpenSSLStreamAdapter::Cleanup(uint8_t alert) {
     }
 #endif
     SSL_free(ssl_);
+    std::cout << "ssl set null" << std::endl;
     ssl_ = nullptr;
   }
   if (ssl_ctx_) {
