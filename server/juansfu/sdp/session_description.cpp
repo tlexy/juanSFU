@@ -349,6 +349,7 @@ bool SessionDescription::parse_ssrc_groups(std::shared_ptr<MediaContent> ptr, co
 		sg.ssrcs.push_back(std::atoll(vecs[i].c_str()));
 	}
 	ptr->ssrc_groups.push_back(sg);
+	return true;
 }
 
 bool SessionDescription::parse_ssrcs(std::shared_ptr<MediaContent> ptr, const std::string& sdp)
