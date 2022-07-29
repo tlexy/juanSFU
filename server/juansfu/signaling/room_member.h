@@ -21,9 +21,9 @@ public:
 	void destory();
 public:
 	std::string uid;
-	std::shared_ptr<SessionDescription> offer_sdp;
-	std::shared_ptr<SessionDescription> answer_sdp;
-	std::shared_ptr<UdpReceiver> udp_receiver;
+	std::shared_ptr<SessionDescription> offer_sdp = nullptr;
+	std::shared_ptr<SessionDescription> answer_sdp = nullptr;
+	std::shared_ptr<UdpReceiver> udp_receiver = nullptr;
 	//key为ip:port pair
 	std::unordered_map<std::string, std::shared_ptr<IceConnection>> ice_connections;
 	std::unordered_map<std::string, std::shared_ptr<RtcDtls>> dtls_connections;

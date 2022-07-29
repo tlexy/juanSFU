@@ -89,7 +89,6 @@ enum class RtcDirection
 
 struct IceParameter
 {
-public:
 	std::string mode;
 	std::string ufrag;
 	std::string passwd;
@@ -97,10 +96,22 @@ public:
 
 struct DtlsParameter
 {
-public:
 	std::string alg;
 	std::string finger_print;
 	std::unique_ptr<rtc::SSLFingerprint> identity_fp = nullptr;
+};
+
+struct SsrcParameter
+{
+	uint32_t ssrc;
+	std::string attri;
+	std::string value;
+};
+
+struct SsrcGroup
+{
+	std::string semantic;
+	std::vector<uint32_t> ssrcs;
 };
 
 class MediaContent {
@@ -122,6 +133,8 @@ public:
 	std::string connection_role;
 	std::vector<std::shared_ptr<IceCandidate>> cands;
 	std::shared_ptr<DtlsParameter> dtls = nullptr;
+	std::vector<SsrcParameter> ssrcs;
+	std::vector<SsrcGroup> ssrc_groups;
 };
 
 class AudioContentDesc : public MediaContent {
@@ -148,7 +161,10 @@ public:
 
 	void create_answer(const RTCOfferAnswerOptions&, const uvcore::IpAddress&);
 	void build(std::shared_ptr<SessionDescription>);
+	void set_peer_sdp(std::shared_ptr<SessionDescription>);
 	std::string to_string();
+
+	std::shared_ptr<MediaContent> get_media_content(MediaType mt);
 
 public:
 	//会话级别
@@ -162,6 +178,9 @@ private:
 	std::unique_ptr<rtc::SSLFingerprint> _fingerprint;
 	uvcore::IpAddress _addr;
 
+	//peer offer sdp
+	std::shared_ptr<SessionDescription> offer_sdp;
+
 private:
 	void add_media_content(std::stringstream&, std::shared_ptr<MediaContent>);
 	void add_media_direction(std::stringstream&, RtcDirection dir);
@@ -172,6 +191,8 @@ private:
 	std::shared_ptr<MediaContent> parse_media(const std::string&);
 	bool parse_rtpmap(const std::string&);
 	bool parse_dtls(std::shared_ptr<MediaContent> ptr, const std::string& sdp);
+	bool parse_ssrcs(std::shared_ptr<MediaContent> ptr, const std::string& sdp);
+	bool parse_ssrc_groups(std::shared_ptr<MediaContent> ptr, const std::string& sdp);
 };
 
 #endif

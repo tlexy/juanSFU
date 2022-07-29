@@ -17,6 +17,10 @@ void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::Tcp
 	{
 		handle_publish(msg, ptr); 
 	}
+	else if (cmd == "pullstream")
+	{
+		handle_pull(msg, ptr);
+	}
 	else
 	{
 		std::cerr << "undefined cmd: " << cmd << std::endl;
@@ -122,43 +126,143 @@ void SignalingHandle::handle_publish(const Json::Value& msg, std::shared_ptr<uvc
 		std::cerr << "sdp error, roomid: " << roomid << ", uid: " << uid  << ", sdp: " << sdpstr << std::endl;
 		return;
 	}
-	print_sdp(vecs);
+	
 	bool flag = member->offer_sdp->parse_sdp(vecs);
-	if (flag)
+	if (!flag)
 	{
-		int port = UdpPortManager::GetInstance()->allocate_port();
-		uvcore::IpAddress addr(port);
-		addr.setIp(UdpPortManager::GetInstance()->ipstr);//127.0.0.1
-		RTCOfferAnswerOptions options;
-		options.send_audio = false;
-		options.send_video = false;
-		options.recv_audio = true;
-		options.recv_video = true;
-		options.use_rtcp_mux = true;
-		member->answer_sdp = std::make_shared<SessionDescription>();
-		member->answer_sdp->create_answer(options, addr);
-		member->answer_sdp->build(member->offer_sdp);
-		std::string ans_offer = member->answer_sdp->to_string();
-
-		Json::Value ret_json = Json::nullValue;
-		ret_json["cmd"] = "resp-publish";
-		ret_json["roomId"] = sroomid;
-		ret_json["uid"] = uid;
-		ret_json["sdp"] = Json::nullValue;
-		ret_json["sdp"]["type"] = "answer";
-		ret_json["sdp"]["sdp"] = ans_offer;
-
-		auto pptr = std::dynamic_pointer_cast<uvcore::WsConnection>(ptr);
-		if (pptr)
-		{
-			Json::StreamWriterBuilder wbuilder;
-			wbuilder["indentation"] = "";
-			std::string send_msg = Json::writeString(wbuilder, ret_json);
-
-			pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
-		}
-		member->start_recv(addr);
+		std::cout << "publish sdp error" << std::endl;
+		return;
 	}
+	print_sdp(vecs);
+	int port = UdpPortManager::GetInstance()->allocate_port();
+	uvcore::IpAddress addr(port);
+	addr.setIp(UdpPortManager::GetInstance()->ipstr);//127.0.0.1
+	RTCOfferAnswerOptions options;
+	options.send_audio = false;
+	options.send_video = false;
+	options.recv_audio = true;
+	options.recv_video = true;
+	options.use_rtcp_mux = true;
+	member->answer_sdp = std::make_shared<SessionDescription>();
+	member->answer_sdp->create_answer(options, addr);
+	member->answer_sdp->build(member->offer_sdp);
+	std::string ans_offer = member->answer_sdp->to_string();
+
+	Json::Value ret_json = Json::nullValue;
+	ret_json["cmd"] = "resp-publish";
+	ret_json["roomId"] = sroomid;
+	ret_json["uid"] = uid;
+	ret_json["sdp"] = Json::nullValue;
+	ret_json["sdp"]["type"] = "answer";
+	ret_json["sdp"]["sdp"] = ans_offer;
+
+	auto pptr = std::dynamic_pointer_cast<uvcore::WsConnection>(ptr);
+	if (pptr)
+	{
+		Json::StreamWriterBuilder wbuilder;
+		wbuilder["indentation"] = "";
+		std::string send_msg = Json::writeString(wbuilder, ret_json);
+
+		pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
+	}
+	member->start_recv(addr);
+	int a = 1;
+}
+
+void SignalingHandle::handle_pull(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
+{
+	//std::cout << "handle pull: " << msg.toStyledString() << std::endl;
+	std::string sroomid = GET_JSON_STRING(msg, "roomId", "");
+	std::string uid = GET_JSON_STRING(msg, "uid", "");
+	std::string remote_uid = GET_JSON_STRING(msg, "remote_uid", "");
+	if (sroomid.size() < 1 || uid.size() < 1 || remote_uid.size() < 1)
+	{
+		std::cerr << "json format error." << __FUNCTION__ << ", line: " << __LINE__ << std::endl;
+		return;
+	}
+
+	int64_t roomid = std::stoll(sroomid.c_str());
+	auto roomptr = find_room(roomid);
+	if (roomptr == nullptr)
+	{
+		std::cerr << "roomid not found in pull, roomid: " << roomid << ", uid: " << uid << std::endl;
+		return;
+	}
+	auto it = roomptr->members.find(uid);
+	if (it == roomptr->members.end())
+	{
+		std::cerr << "uid not found in pull, roomid: " << roomid << ", uid: " << uid << std::endl;
+		return;
+	}
+	auto member = it->second;
+
+	// peer
+	it = roomptr->members.find(remote_uid);
+	if (it == roomptr->members.end())
+	{
+		std::cerr << "remote uid not found in pull, roomid: " << roomid << ", remote uid: " << remote_uid << std::endl;
+		return;
+	}
+	auto peer = it->second;
+
+	std::string sdp = GET_JSON_STRING(msg, "sdp", "");
+	static std::string start = "sdp\":\"";
+	auto pos = sdp.find(start);
+	if (pos == std::string::npos)
+	{
+		std::cerr << "sdp format error. " << roomid << ", uid: " << uid << std::endl;
+		return;
+	}
+	std::string sdpstr = sdp.substr(pos + start.size(), sdp.size() - pos - 2 - start.size() - 4);
+	//std::cout << "publish uid: " << uid << ", sdp: " << sdpstr << std::endl;
+
+	std::vector<std::string> vecs;
+	SUtil::split(sdpstr, "\\r\\n", vecs);
+	if (vecs.size() < 6)
+	{
+		std::cerr << "sdp error, roomid: " << roomid << ", uid: " << uid << ", sdp: " << sdpstr << std::endl;
+		return;
+	}
+
+	bool flag = member->offer_sdp->parse_sdp(vecs);
+	if (!flag)
+	{
+		std::cout << "sdp error." << std::endl;
+	}
+	print_sdp(vecs);
+	int port = UdpPortManager::GetInstance()->allocate_port();
+	uvcore::IpAddress addr(port);
+	addr.setIp(UdpPortManager::GetInstance()->ipstr);//127.0.0.1
+	RTCOfferAnswerOptions options;
+	options.send_audio = true;
+	options.send_video = true;
+	options.recv_audio = false;
+	options.recv_video = false;
+	options.use_rtcp_mux = true;
+	member->answer_sdp = std::make_shared<SessionDescription>();
+	member->answer_sdp->create_answer(options, addr);
+	member->answer_sdp->build(member->offer_sdp);
+	member->answer_sdp->set_peer_sdp(peer->offer_sdp);
+	std::string ans_offer = member->answer_sdp->to_string();
+
+	Json::Value ret_json = Json::nullValue;
+	ret_json["cmd"] = "resp-pullstream";
+	ret_json["roomId"] = sroomid;
+	ret_json["uid"] = uid;
+	ret_json["sdp"] = Json::nullValue;
+	ret_json["sdp"]["type"] = "answer";
+	ret_json["sdp"]["sdp"] = ans_offer;
+
+	auto pptr = std::dynamic_pointer_cast<uvcore::WsConnection>(ptr);
+	if (pptr)
+	{
+		Json::StreamWriterBuilder wbuilder;
+		wbuilder["indentation"] = "";
+		std::string send_msg = Json::writeString(wbuilder, ret_json);
+
+		pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
+	}
+	//member->start_recv(addr);
 	int a = 1;
 }
 

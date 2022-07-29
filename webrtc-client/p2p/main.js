@@ -3,15 +3,13 @@
 let localVideo = document.querySelector('#localVideo');
 let remoteVideo = document.querySelector('#remoteVideo');
 
+let remote_uid = "";
+
 const SIGNAL_TYPE_JOIN = "join";
 const SIGNAL_TYPE_RESP_JOIN = "resp-join"; 
 const SIGNAL_TYPE_LEAVE = "leave";
-const SIGNAL_TYPE_NEW_PEER = "new-peer";
-const SIGNAL_TYPE_PEER_LEAVE = "peer-leave";
-const SIGNAL_TYPE_OFFER = "sdp-offer";
 const SIGNAL_TYPE_RESP_PUBLISH = "resp-publish";
-const SIGNAL_TYPE_ANSWER = "sdp-answer";
-const SIGNAL_TYPE_CANDIDATE = "candidate";
+const SIGNAL_TYPE_RESP_PULL = "resp-pullstream";
 
 // function initLocalStream2(stream)
 // {
@@ -41,7 +39,7 @@ class ZalRtcPeer {
         };
         this.pc = new RTCPeerConnection(conf);
 
-        this.pc.onicecandidate = this.handleIceCandidate.bind(this);
+       // this.pc.onicecandidate = this.handleIceCandidate.bind(this);
         this.pc.ontrack = this.handleRemoteStreamAdd.bind(this);
 
         this.local_stream.getTracks().forEach(track => this.pc.addTrack(track, this.local_stream));
@@ -64,9 +62,18 @@ class ZalRtcPeer {
             'cmd': 'publish',
             'roomId': this.room_id,
             'uid': this.local_uid,
-            'remote_uid': this.remote_uid,
             'sdp': JSON.stringify(this.local_desc)
         };
+        if (remote_uid.length > 0)
+        {
+            jsonMsg = {
+                'cmd': 'pullstream',
+                'roomId': this.room_id,
+                'uid': this.local_uid,
+                'remote_uid': this.remote_uid,
+                'sdp': JSON.stringify(this.local_desc)
+            };
+        }
         var message = JSON.stringify(jsonMsg);
         this.ws_connection.send(message);
         console.info("send offer message: " + message);
@@ -90,6 +97,16 @@ class ZalRtcPeer {
         let oo = {
             "offerToReceiveAudio": false,
             "offerToReceiveVideo": false
+        }
+
+        let oo2 = {
+            "offerToReceiveAudio": true,
+            "offerToReceiveVideo": true
+        }
+        
+        if (remoteUid > 0)
+        {
+            oo = oo2;
         }
         this.pc.createOffer(oo).then(this.doCreateOffer.bind(this)).catch(function(e){
             console.error("handleCreateOfferError: " + e);
@@ -149,27 +166,6 @@ class ZalRtcPeer {
             .catch(function(e){
                 console.error("addIceCandidate failed: " + e);
             });
-    }
-
-    handleIceCandidate(event)
-    {
-        console.info("handleIceCandidate");
-        if (event.candidate) 
-        {
-            var jsonMsg = {
-                'cmd': 'candidate',
-                'roomId': this.room_id,
-                'uid': this.local_uid,
-                'remote_uid': this.remote_uid,
-                'candidates': JSON.stringify(event.candidate)
-            };
-            var message = JSON.stringify(jsonMsg);
-            this.ws_connection.send(message);
-            console.info("send candidate message: " + message);
-        } else 
-        {
-            console.warn("End of candidates");
-        }
     }
 
     handleRemoteStreamAdd(ev)
@@ -234,54 +230,20 @@ class ZalRtc
     //websocket处理函数
     OnServerMsg(ev) 
     {
-        console.log("onMessage: " + ev.data);
+        //console.log("onMessage: " + ev.data);
         let json = JSON.parse(ev.data);
         switch (json.cmd) {
-            case SIGNAL_TYPE_NEW_PEER:
-                this.handleRemoteNewPeer(json);
-                break;
             case SIGNAL_TYPE_RESP_JOIN:
                 this.handleResponseJoin(json);
-                break;
-            case SIGNAL_TYPE_PEER_LEAVE:
-                this.handleRemotePeerLeave(json);
-                break;
-            case SIGNAL_TYPE_OFFER:
-                this.handleRemoteOffer(json);
                 break;
             case SIGNAL_TYPE_RESP_PUBLISH:
                 this.handleResponsePublish(json);
                 break;
-            case SIGNAL_TYPE_ANSWER:
-                this.handleRemoteAnswer(json);
-                break;
-            case SIGNAL_TYPE_CANDIDATE:
-                this.handleRemoteCandidate(json);
+            case SIGNAL_TYPE_RESP_PULL:
+                this.handleResponsePullStream(json);
                 break;
         }
     }
-
-    //信令部分
-    //新人加入房间
-    // handleRemoteNewPeer(json) 
-    // {
-    //     let remoteUid = json.uid;
-    //     let roomid = json.roomId;
-    //     if (roomid != this.room_id)
-    //     {
-    //         console.error("roomid error: " + roomid, ", this.roomid: " + this.room_id);
-    //         return;
-    //     }
-    //     let ZalRtcPeerObj = this.room.get(this.local_uid);
-    //     if (ZalRtcPeerObj)
-    //     {
-    //         ZalRtcPeerObj.CreateOffer(remoteUid);
-    //     }
-    //     else 
-    //     {
-    //         console.log("handleRemoteNewPeer peer obj is null");
-    //     }
-    // }
 
     publishStream()
     {
@@ -289,6 +251,19 @@ class ZalRtc
         if (ZalRtcPeerObj)
         {
             ZalRtcPeerObj.CreateOffer(-1);
+        }
+        else 
+        {
+            console.log("handleRemoteNewPeer peer obj is null");
+        }
+    }
+
+    pullStream()
+    {
+        let ZalRtcPeerObj = this.room.get(this.local_uid);
+        if (ZalRtcPeerObj)
+        {
+            ZalRtcPeerObj.CreateOffer(remote_uid);
         }
         else 
         {
@@ -308,6 +283,11 @@ class ZalRtc
             return;
         }
         console.log("room size: " + this.room.size + ", uid: " + uid);
+        if (json.members.length > 0)
+        {
+            remote_uid = json.members[0]["uid"];
+            console.log("remote uid: " + remote_uid);
+        }
         // 调用这里，ZalRtcPeerObj.local_stream属性仍然可能没有设置（至少服务器在本地的情况下是这样的。）
         // let ZalRtcPeerObj = this.room.get(uid);
         // if (ZalRtcPeerObj)
@@ -340,57 +320,20 @@ class ZalRtc
     //对端离开
     handleRemotePeerLeave(json) { }
 
-    //对端发送sdp-offer
-    handleRemoteOffer(json) 
-    {
-        let remoteUid = json.uid;
-        console.log("remote sdp-offer: " + json);
-        let ZalRtcPeerObj = this.room.get(this.local_uid);
-        if (ZalRtcPeerObj) {
-            let desc = JSON.parse(json.sdp);
-            ZalRtcPeerObj.CreateAnswer(remoteUid, desc);
-        }
-        else {
-            console.log("handleRemoteNewPeer peer obj is null");
-        }
-    }
-
-    //对端发送sdp-answer
-    handleRemoteAnswer(json) 
+    handleResponsePullStream(json) 
     { 
-        console.log("handleRemoteAnswer: " + json);
-        let uid = json.remote_uid;
+        console.log("handleResponsePublish");
+        console.log(json.sdp.sdp);
         let roomid = json.roomId;
         if (roomid != this.room_id) {
-            console.error("handleRemoteAnswer, roomid error: " + roomid);
+            console.error("handleResponsePublish, roomid error: " + roomid);
             return;
         }
-        let ZalRtcPeerObj = this.room.get(uid);
+        let ZalRtcPeerObj = this.room.get(json.uid);
         if (typeof (ZalRtcPeerObj) == "undefined") {
-            console.error("handleRemoteAnswer, user not found, uid: " + uid);
+            console.error("handleResponsePublish, user not found, uid: " + uid);
             return;
         }
-        ZalRtcPeerObj.SetRemoteSdp(json.sdp);
-    }
-
-    //对端发送candidate
-    handleRemoteCandidate(json) 
-    {
-        console.log("handleRemoteCandidate: " + json);
-        let uid = json.remote_uid;
-        let roomid = json.roomId;
-        if (roomid != this.room_id)
-        {
-            console.error("handleRemoteCandidate, roomid error: " + roomid);
-            return;
-        }
-        let ZalRtcPeerObj = this.room.get(uid);
-        if (typeof(ZalRtcPeerObj) == "undefined")
-        {
-            console.error("handleRemoteCandidate, user not found, uid: " + uid);
-            return;
-        }
-        ZalRtcPeerObj.addIceCandidate(json.candidates);
     }
 
     //主动的动作
@@ -438,4 +381,9 @@ document.getElementById('leaveBtn').onclick = function () {
 document.getElementById('publishBtn').onclick = function () {
     console.log("发布按钮被点击");
     zal_rtc.publishStream();
+}
+
+document.getElementById('pullBtn').onclick = function () {
+    console.log("拉流按钮被点击");
+    zal_rtc.pullStream();
 }

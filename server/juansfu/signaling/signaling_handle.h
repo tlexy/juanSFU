@@ -34,6 +34,7 @@ public:
 private:
 	void handle_join(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>);
 	void handle_publish(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>);
+	void handle_pull(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection>);
 
 	std::shared_ptr<Room> find_room(int64_t roomid);
 	std::shared_ptr<Room> create_room(int64_t roomid);

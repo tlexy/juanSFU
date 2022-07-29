@@ -116,6 +116,15 @@ void SessionDescription::add_media_content(std::stringstream& ss, std::shared_pt
 			<< " typ " << ptr->cands[i]->type
 			<< "\r\n";
 	}
+	for (int i = 0; i < ptr->ssrcs.size(); ++i)
+	{
+		ss << "a=ssrc:" << ptr->ssrcs[i].ssrc << " " << ptr->ssrcs[i].attri;
+		if (ptr->ssrcs[i].value.size() > 0)
+		{
+			ss << ":" << ptr->ssrcs[i].value;
+		}
+		ss << "\r\n";
+	}
 }
 
 void SessionDescription::add_media_direction(std::stringstream& ss, RtcDirection dir)
@@ -144,6 +153,23 @@ void SessionDescription::build(std::shared_ptr<SessionDescription> sdp)
 	session.session_id = sdp->session.session_id;
 	session.uni_addr = "0.0.0.0";
 	session.username = "-";
+}
+
+void SessionDescription::set_peer_sdp(std::shared_ptr<SessionDescription> sdp)
+{
+	offer_sdp = sdp;
+}
+
+std::shared_ptr<MediaContent> SessionDescription::get_media_content(MediaType mt)
+{
+	for (int i = 0; i < media_contents.size(); ++i)
+	{
+		if (media_contents[i]->type() == mt)
+		{
+			return media_contents[i];
+		}
+	}
+	return nullptr;
 }
 
 void SessionDescription::create_answer(const RTCOfferAnswerOptions& options, const uvcore::IpAddress& addr)
@@ -187,6 +213,15 @@ void SessionDescription::create_answer(const RTCOfferAnswerOptions& options, con
 	fp.params["minptime"] = "10";
 	fp.params["useinbandfec"] = "1";
 	audioptr->fmtps.push_back(fp);
+
+	if (offer_sdp)
+	{
+		auto offer_a = offer_sdp->get_media_content(MediaType::MEDIA_TYPE_AUDIO);
+		if (options.send_audio && offer_a)
+		{
+			audioptr->ssrcs = offer_a->ssrcs;
+		}
+	}
 
 
 	//video
@@ -278,6 +313,14 @@ bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 				ptr->dtls->identity_fp = rtc::SSLFingerprint::CreateUniqueFromRfc4572(ptr->dtls->alg, ptr->dtls->finger_print);
 			}
 		}
+		else if (vecs[i].find("a=ssrc:") != std::string::npos && ptr)
+		{
+			flag = parse_ssrcs(ptr, vecs[i]);
+		}
+		else if (vecs[i].find("a=ssrc-group:") != std::string::npos && ptr)
+		{
+			flag = parse_ssrc_groups(ptr, vecs[i]);
+		}
 
 		if (!flag)
 		{
@@ -286,6 +329,51 @@ bool SessionDescription::parse_sdp(const std::vector<std::string>& vecs)
 		}
 	}
 	return flag;
+}
+
+bool SessionDescription::parse_ssrc_groups(std::shared_ptr<MediaContent> ptr, const std::string& sdp)
+{
+	size_t pos = sdp.find(":");
+	std::string substr = sdp.substr(pos + 1);
+	std::vector<std::string> vecs;
+	SUtil::split(substr, " ", vecs);
+	if (vecs.size() < 2)
+	{
+		return false;
+	}
+
+	SsrcGroup sg;
+	sg.semantic = vecs[0];
+	for (int i = 1; i < vecs.size(); ++i)
+	{
+		sg.ssrcs.push_back(std::atoll(vecs[i].c_str()));
+	}
+	ptr->ssrc_groups.push_back(sg);
+}
+
+bool SessionDescription::parse_ssrcs(std::shared_ptr<MediaContent> ptr, const std::string& sdp)
+{
+	size_t pos = sdp.find(":");
+	std::string substr = sdp.substr(pos + 1);
+	std::vector<std::string> vecs;
+	SUtil::split(substr, ":", vecs);
+	if (vecs.size() != 2)
+	{
+		return false;
+	}
+	SsrcParameter sp;
+	sp.value = vecs[1];
+
+	std::vector<std::string> vecs2;
+	SUtil::split(vecs[0], " ", vecs2);
+	if (vecs.size() != 2)
+	{
+		return false;
+	}
+	sp.attri = vecs2[1];
+	sp.ssrc = std::atoll(vecs2[0].c_str());
+	ptr->ssrcs.push_back(sp);
+	return true;
 }
 
 bool SessionDescription::parse_version(const std::string& sdp)

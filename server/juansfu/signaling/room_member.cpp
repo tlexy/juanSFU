@@ -22,9 +22,13 @@ void RoomMember::start_recv(const uvcore::IpAddress& addr)
 
 void RoomMember::stop_recv()
 {
-	udp_receiver->stop();
-	int port = _addr.getPort();
-	UdpPortManager::GetInstance()->recycle_port(port);
+	if (udp_receiver)
+	{
+		udp_receiver->stop();
+		int port = _addr.getPort();
+		UdpPortManager::GetInstance()->recycle_port(port);
+		udp_receiver = nullptr;
+	}
 }
 
 void RoomMember::destory()
@@ -68,12 +72,12 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 	else if (is_rtcp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
 		//on_handle_rtcp_data(udp_data, udp_data_len, address);
-		std::cerr << "is_rtcp protocol." << std::endl;
+		//std::cerr << "is_rtcp protocol." << std::endl;
 	}
 	else if (is_rtp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size())) {
 
 		//on_handle_rtp_data(udp_data, udp_data_len, address);
-		std::cerr << "is_rtp protocol." << std::endl;
+		//std::cerr << "is_rtp protocol." << std::endl;
 	}
 	else if (RtcDtls::is_dtls(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
