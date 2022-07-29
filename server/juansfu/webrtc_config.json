@@ -1,6 +1,6 @@
 {
     "server_port": 5000,
-    "server_ip": "192.168.110.84",
+    "server_ip": "192.168.101.40",
     "udp_port_start": 7000,
     "udp_port_end": 7200,
     "udp_port_step": 1

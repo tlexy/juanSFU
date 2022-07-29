@@ -86,7 +86,7 @@ struct stun_header
 class StunAttribute
 {
 public:
-    virtual int write(rtc::ByteBufferWriter* writer) { return 0; };
+    virtual int write(rtc::ByteBufferWriter* writer) { return 0; }
     virtual ~StunAttribute();
     uint16_t type;
     uint16_t len;
