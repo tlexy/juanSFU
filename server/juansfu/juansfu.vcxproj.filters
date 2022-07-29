@@ -113,9 +113,6 @@
     <ClCompile Include="rtc_base\rtc_certificate.cc">
       <Filter>rtc_base</Filter>
     </ClCompile>
-    <ClCompile Include="rtc_base\rtc_certificate_generator.cc">
-      <Filter>rtc_base</Filter>
-    </ClCompile>
     <ClCompile Include="rtc_base\checks.cc">
       <Filter>rtc_base</Filter>
     </ClCompile>
@@ -359,6 +356,9 @@
     <ClCompile Include="api\crypto\crypto_options.cc">
       <Filter>api\crypto</Filter>
     </ClCompile>
+    <ClCompile Include="rtc_base\rtc_certificate_generator.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -395,9 +395,6 @@
       <Filter>rtc_base</Filter>
     </ClInclude>
     <ClInclude Include="rtc_base\rtc_certificate.h">
-      <Filter>rtc_base</Filter>
-    </ClInclude>
-    <ClInclude Include="rtc_base\rtc_certificate_generator.h">
       <Filter>rtc_base</Filter>
     </ClInclude>
     <ClInclude Include="api\scoped_refptr.h">
@@ -750,6 +747,9 @@
     </ClInclude>
     <ClInclude Include="api\crypto\crypto_options.h">
       <Filter>api\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\rtc_certificate_generator.h">
+      <Filter>rtc_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -83,6 +83,7 @@ RtcDtls::RtcDtls(uvcore::Udp* udp, const uvcore::IpAddress& remote_addr)
 	DtlsStreamInterface* downward_ptr = downward.get();
 	_downward = downward_ptr;
 
+	rtc::ThreadManager::Instance()->WrapCurrentThread();
 	_dtls_adapter = rtc::SSLStreamAdapter::Create(std::move(downward));
 	webrtc::CryptoOptions crypto_options;
 	_srtp_ciphers = crypto_options.GetSupportedDtlsSrtpCryptoSuites();
@@ -131,8 +132,12 @@ bool RtcDtls::setup_dtls()
 	_dtls_adapter->SignalEvent.connect(this, &RtcDtls::slot_dtls_event);
 	_dtls_adapter->SignalSSLHandshakeError.connect(this, &RtcDtls::slot_dtls_handshake_error);
 
+	if (_remote_fingerprint_value.size() < 1)
+	{
+		return false;
+	}
 	rtc::SSLPeerCertificateDigestError err;
-	if (_remote_fingerprint_value.size() && !_dtls_adapter->SetPeerCertificateDigest(
+	if (!_dtls_adapter->SetPeerCertificateDigest(
 		_remote_alg,
 		(const unsigned char*)_remote_fingerprint_value.data(),
 		_remote_fingerprint_value.size(), &err))
@@ -257,7 +262,7 @@ void RtcDtls::handle_dtls(const uint8_t* data, size_t len)
 bool RtcDtls::do_handle_dtls_packet(const uint8_t* data, size_t len)
 {
 	size_t tmp_size = len;
-
+	const uint8_t* temp = data;
 	while (tmp_size > 0) {
 		if (tmp_size < k_dtls_record_header_len) {
 			return false;
@@ -271,6 +276,6 @@ bool RtcDtls::do_handle_dtls_packet(const uint8_t* data, size_t len)
 		data += k_dtls_record_header_len + record_len;
 		tmp_size -= k_dtls_record_header_len + record_len;
 	}
-
-	return _downward->on_packet_receive(data, len);
+	//std::cout << ""
+	return _downward->on_packet_receive(temp, len);
 }

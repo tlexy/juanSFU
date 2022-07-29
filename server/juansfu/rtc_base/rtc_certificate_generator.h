@@ -19,7 +19,7 @@
 #include "rtc_base/rtc_certificate.h"
 #include "rtc_base/ssl_identity.h"
 #include "rtc_base/system/rtc_export.h"
-//#include "rtc_base/thread.h"
+#include "rtc_base/thread.h"
 
 namespace rtc {
 
@@ -44,10 +44,10 @@ class RTCCertificateGeneratorInterface {
   // result on the signaling thread. `exipres_ms` optionally specifies for how
   // long we want the certificate to be valid, but the implementation may choose
   // its own restrictions on the expiration time.
-  //virtual void GenerateCertificateAsync(
-  //    const KeyParams& key_params,
-  //    const absl::optional<uint64_t>& expires_ms,
-  //    const scoped_refptr<RTCCertificateGeneratorCallback>& callback) = 0;
+  virtual void GenerateCertificateAsync(
+      const KeyParams& key_params,
+      const absl::optional<uint64_t>& expires_ms,
+      const scoped_refptr<RTCCertificateGeneratorCallback>& callback) = 0;
 };
 
 // Standard implementation of `RTCCertificateGeneratorInterface`.
@@ -66,7 +66,7 @@ class RTC_EXPORT RTCCertificateGenerator
       const KeyParams& key_params,
       const absl::optional<uint64_t>& expires_ms);
 
-  //RTCCertificateGenerator(Thread* signaling_thread, Thread* worker_thread);
+  RTCCertificateGenerator(Thread* signaling_thread, Thread* worker_thread);
   ~RTCCertificateGenerator() override {}
 
   // `RTCCertificateGeneratorInterface` overrides.
@@ -74,14 +74,14 @@ class RTC_EXPORT RTCCertificateGenerator
   // that many milliseconds from now. `expires_ms` is limited to a year, a
   // larger value than that is clamped down to a year. If `expires_ms` is not
   // specified, a default expiration time is used.
-  //void GenerateCertificateAsync(
-  //    const KeyParams& key_params,
-  //    const absl::optional<uint64_t>& expires_ms,
-  //    const scoped_refptr<RTCCertificateGeneratorCallback>& callback) override;
+  void GenerateCertificateAsync(
+      const KeyParams& key_params,
+      const absl::optional<uint64_t>& expires_ms,
+      const scoped_refptr<RTCCertificateGeneratorCallback>& callback) override;
 
  private:
-  //Thread* const signaling_thread_;
-  //Thread* const worker_thread_;
+  Thread* const signaling_thread_;
+  Thread* const worker_thread_;
 };
 
 }  // namespace rtc
