@@ -43,13 +43,22 @@ rtc::StreamResult DtlsStreamInterface::Write(const void* data,
 	size_t* written,
 	int* error)
 {
-	std::cout << "dtls write data, len: " << data_len << std::endl;
-	_udp->send2((const char*)data, data_len, _remote_addr);
+	if (!_is_stop)
+	{
+		std::cout << "dtls write data, len: " << data_len << std::endl;
+		_udp->send2((const char*)data, data_len, _remote_addr);
+	}
 	if (written) {
 		*written = data_len;
 	}
+	
 
 	return rtc::SR_SUCCESS;
+}
+
+void DtlsStreamInterface::stop_udp()
+{
+	_is_stop = true;
 }
 
 void DtlsStreamInterface::Close()
@@ -93,6 +102,7 @@ void RtcDtls::destory()
 {
 	//_dtls_adapter = nullptr;
 	//_downward = nullptr;
+	_downward->stop_udp();
 }
 
 bool RtcDtls::is_dtls(const uint8_t* data, size_t len)

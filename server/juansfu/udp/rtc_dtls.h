@@ -25,12 +25,14 @@ public:
     void Close() override;
 
     bool on_packet_receive(const uint8_t* data, size_t len);
+    void stop_udp();
 
 private:
     rtc::BufferQueue _que;
     rtc::StreamState _state = rtc::SS_OPEN;
     uvcore::Udp* _udp;
     uvcore::IpAddress _remote_addr;
+    bool _is_stop = false;
 
 };
 
