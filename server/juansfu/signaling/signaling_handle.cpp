@@ -43,6 +43,11 @@ void SignalingHandle::handle_join(const Json::Value& msg, std::shared_ptr<uvcore
 	{
 		roomptr = create_room(roomid);
 	}
+	if (roomptr->members.find(uid) != roomptr->members.end())
+	{
+		std::cerr << "join repeated." << std::endl;
+		return;
+	}
 	
 	auto member = std::make_shared<RoomMember>();
 	member->uid = uid;
@@ -240,9 +245,10 @@ void SignalingHandle::handle_pull(const Json::Value& msg, std::shared_ptr<uvcore
 	options.recv_video = false;
 	options.use_rtcp_mux = true;
 	member->answer_sdp = std::make_shared<SessionDescription>();
+	member->answer_sdp->set_peer_sdp(peer->offer_sdp);
 	member->answer_sdp->create_answer(options, addr);
 	member->answer_sdp->build(member->offer_sdp);
-	member->answer_sdp->set_peer_sdp(peer->offer_sdp);
+	
 	std::string ans_offer = member->answer_sdp->to_string();
 
 	Json::Value ret_json = Json::nullValue;
