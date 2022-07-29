@@ -26,6 +26,7 @@
 #include <utility>
 #include <vector>
 #include <iostream>
+#include <thread>
 
 #include "rtc_base/checks.h"
 #include "rtc_base/logging.h"
@@ -990,6 +991,7 @@ void OpenSSLStreamAdapter::Cleanup(uint8_t alert) {
       }
     } else {
 #endif
+        std::cout << "threadid: " << std::this_thread::get_id() << std::endl;
       ret = SSL_shutdown(ssl_);
       if (ret < 0) {
         RTC_LOG(LS_WARNING)

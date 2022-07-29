@@ -69,6 +69,10 @@ void DtlsStreamInterface::Close()
 
 bool DtlsStreamInterface::on_packet_receive(const uint8_t* data, size_t len)
 {
+	if (_is_stop)
+	{
+		return false;
+	}
 	//size_t written_bytes = 0;;
 	bool flag = _que.WriteBack(data, len, NULL);
 	if (!flag)

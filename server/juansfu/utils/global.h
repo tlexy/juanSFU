@@ -5,14 +5,14 @@
 #include <juansfu/rtc_base/rtc_certificate.h>
 
 namespace uvcore {
-	class ThreadTimerEventLoop;
+	class EventLoop;
 	class UdpServer;
 }
 
 class Global : public Singleton<Global>
 {
 public:
-	void init();
+	void init(std::shared_ptr<uvcore::EventLoop>);
 
 	rtc::scoped_refptr<rtc::RTCCertificate>
 		get_dtls_certificate();
@@ -25,7 +25,7 @@ private:
 private:
 	rtc::scoped_refptr<rtc::RTCCertificate> _certificate;
 
-	std::shared_ptr<uvcore::ThreadTimerEventLoop> _loop;
+	//std::shared_ptr<uvcore::ThreadTimerEventLoop> _loop;
 	std::shared_ptr<uvcore::UdpServer> _udp_server;
 };
 

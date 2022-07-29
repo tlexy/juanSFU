@@ -4,6 +4,7 @@
 #include <juansfu/signaling/port_mgr.h>
 #include <juansfu/utils/sutil.h>
 #include <assert.h>
+#include <juansfu/utils/global.h>
 
 void JuanSfu::init(const char* config_file)
 {
@@ -32,6 +33,7 @@ void JuanSfu::init(const char* config_file)
 void JuanSfu::start_server()
 {
 	_server = std::make_shared<WssServer>();
+	Global::GetInstance()->init(_server->get_loop());
 	_server->start_timer(5000);
 	_server->async_io_start("0.0.0.0", _port);
 }

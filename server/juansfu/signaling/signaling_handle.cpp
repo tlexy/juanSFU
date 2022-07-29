@@ -290,7 +290,7 @@ void SignalingHandle::remove(std::shared_ptr<uvcore::TcpConnection> ptr)
 					if (rit->second->members.find(sit->first) != rit->second->members.end())
 					{
 						rit->second->members[sit->first]->stop_recv();
-						//rit->second->members[sit->first]->destory();
+						rit->second->members[sit->first]->destory();
 						rit->second->members.erase(sit->first);
 					}
 					rit->second->connections.erase(sit);

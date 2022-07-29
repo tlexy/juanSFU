@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 #endif
 
 	Global::Instance();
-	Global::GetInstance()->init();
+	//Global::GetInstance()->init();
 	//TlsConfig::init_server("server.crt", "server.key");
 	rtc::InitRandom(time(NULL));
 	//std::cout << "random str24: " << rtc::CreateRandomString(24) << std::endl;
