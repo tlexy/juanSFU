@@ -113,46 +113,6 @@ class ZalRtcPeer {
         });
     }
 
-    sendSdpAnswer()
-    {
-        var jsonMsg = {
-            'cmd': 'sdp-answer',
-            'roomId': this.room_id,
-            'uid': this.local_uid,
-            'remote_uid': this.remote_uid,
-            'sdp': JSON.stringify(this.local_desc)
-        };
-        var message = JSON.stringify(jsonMsg);
-        this.ws_connection.send(message);
-        console.info("send answer offer message: " + message);
-    }
-
-    doCreateAnswer(session)
-    {
-        this.local_desc = session;
-        this.pc.setLocalDescription(session).then(this.sendSdpAnswer.bind(this)).catch(function(e){
-            console.error("doCreateAnswer offer setLocalDescription failed: " + e);
-        });
-    }
-
-    doAnswer()
-    {
-        this.pc.createAnswer().then(this.doCreateAnswer.bind(this)).catch(function(e){
-            console.error("create answer failed: " + e);
-        });
-    }
-
-    CreateAnswer(remoteUid, sdp_offer)
-    {
-        this.remote_uid = remoteUid;
-        if (this.pc == null) 
-        {
-            this.CreatePeerConnection();
-        }
-        this.pc.setRemoteDescription(sdp_offer)
-        this.doAnswer();
-    }
-
     SetRemoteSdp(sdp)
     {
         //var desc = JSON.parse(sdp);
@@ -288,16 +248,6 @@ class ZalRtc
             remote_uid = json.members[0]["uid"];
             console.log("remote uid: " + remote_uid);
         }
-        // 调用这里，ZalRtcPeerObj.local_stream属性仍然可能没有设置（至少服务器在本地的情况下是这样的。）
-        // let ZalRtcPeerObj = this.room.get(uid);
-        // if (ZalRtcPeerObj)
-        // {
-        //     localVideo.srcObject = ZalRtcPeerObj.local_stream;
-        // }
-        // else 
-        // {
-        //     console.log("peer obj is null");
-        // }
     }
 
     handleResponsePublish(json)
@@ -334,6 +284,7 @@ class ZalRtc
             console.error("handleResponsePublish, user not found, uid: " + uid);
             return;
         }
+        ZalRtcPeerObj.SetRemoteSdp(json.sdp);
     }
 
     //主动的动作

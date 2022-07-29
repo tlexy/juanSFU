@@ -268,7 +268,7 @@ void SignalingHandle::handle_pull(const Json::Value& msg, std::shared_ptr<uvcore
 
 		pptr->write(send_msg.c_str(), send_msg.size(), OpCode::WsTextFrame);
 	}
-	//member->start_recv(addr);
+	member->start_recv(addr);
 	int a = 1;
 }
 
