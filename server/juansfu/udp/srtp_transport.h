@@ -30,12 +30,17 @@ public:
 	void add_subscriber(const std::string& addr, std::shared_ptr<SrtpSubscriber>);
 	void remove_subscriber(const std::string& addr);
 
+    void get_send_auth_tag_len(int* rtp_auth_tag_len, int* rtcp_auth_tag_len);
+
 private:
     static void event_handle_thunk(srtp_event_data_t* ev);
+    void reset();
 
 private:
 	std::unordered_map<std::string, std::shared_ptr<SrtpSubscriber>> _subs_map;
-    bool _srtp_init = false;
+    static bool _srtp_init;
+    std::shared_ptr<SrtpSession> _send_session = nullptr;
+    std::shared_ptr<SrtpSession> _recv_session = nullptr;
 
 };
 
