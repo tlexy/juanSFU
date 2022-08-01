@@ -116,14 +116,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;WEBRTC_WIN;WIN32_LEAN_AND_MEAN;NOMINMAX;_SILENCE_CXX17_RESULT_OF_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win;..;.;$(ProjectDir)..\..\..\abseil-cpp;$(ProjectDir)..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\uvnet\;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\include;$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\include;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win;..;.;$(ProjectDir)..\..\..\abseil-cpp;$(ProjectDir)..\..\..;$(ProjectDir)..\3rd\libsrtp-2.4.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\lib;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\build\Debug;$(ProjectDir)..\..\..\uvnet\x64\Debug;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>uvnet.lib;uv_a.lib;libcrypto.lib;libssl.lib;jsoncpp_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\uvnet\3rd\OpenSSL1_1_1g_vs2015_64\lib;$(ProjectDir)..\..\..\uvnet\3rd\libuv-v1.44.1\build\Debug;$(ProjectDir)..\..\..\uvnet\x64\Debug;$(ProjectDir)..\3rd\jsoncpp-1.9.5-win\lib;$(ProjectDir)..\3rd\libsrtp-2.4.2\build\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>uvnet.lib;uv_a.lib;libcrypto.lib;libssl.lib;jsoncpp_static.lib;srtp2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -229,6 +229,9 @@
     <ClCompile Include="system_wrappers\source\sleep.cc" />
     <ClCompile Include="udp\ice_connection.cpp" />
     <ClCompile Include="udp\rtc_dtls.cpp" />
+    <ClCompile Include="udp\srtp_session.cpp" />
+    <ClCompile Include="udp\srtp_subscriber.cpp" />
+    <ClCompile Include="udp\srtp_transport.cpp" />
     <ClCompile Include="udp\stun.cpp" />
     <ClCompile Include="udp\udp_receiver.cpp" />
     <ClCompile Include="utils\global.cpp" />
@@ -359,6 +362,9 @@
     <ClInclude Include="system_wrappers\include\sleep.h" />
     <ClInclude Include="udp\ice_connection.h" />
     <ClInclude Include="udp\rtc_dtls.h" />
+    <ClInclude Include="udp\srtp_session.h" />
+    <ClInclude Include="udp\srtp_subscriber.h" />
+    <ClInclude Include="udp\srtp_transport.h" />
     <ClInclude Include="udp\stun.h" />
     <ClInclude Include="udp\udp_receiver.h" />
     <ClInclude Include="utils\global.h" />

@@ -33,21 +33,44 @@ void RoomMember::stop_recv()
 
 void RoomMember::destory()
 {
-	for (auto it = dtls_connections.begin(); it != dtls_connections.end(); ++it)
+	/*for (auto it = dtls_connections.begin(); it != dtls_connections.end(); ++it)
 	{
 		it->second->destory();
+	}*/
+	for (auto it = udp_handles.begin(); it != udp_handles.end(); ++it)
+	{
+		if (it->second->dtls_connection)
+		{
+			it->second->dtls_connection->destory();
+		}
 	}
 }
 
 void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 {
+	std::shared_ptr<MemberUdpPorts> up = nullptr;
+	auto it = udp_handles.find(addr.toString());
+	if (it == udp_handles.end())
+	{
+		up = std::make_shared<MemberUdpPorts>();
+		udp_handles[addr.toString()] = up;
+	}
+	else
+	{
+		up = it->second;
+	}
 	if (StunPacket::is_stun(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
 		std::cout << "stun from: " << addr.toString() << std::endl;
-		auto it = ice_connections.find(addr.toString());
+		/*auto it = ice_connections.find(addr.toString());
 		if (it != ice_connections.end())
 		{
 			it->second->on_udp_data(udp);
+			return;
+		}*/
+		if (up->ice_connection)
+		{
+			up->ice_connection->on_udp_data(udp);
 			return;
 		}
 		//new connection...
@@ -65,7 +88,8 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 		{
 			auto ptr = std::make_shared<IceConnection>(addr, _addr);
 			ptr->set_ice_pwd(answer_sdp->media_contents[0]->ice.passwd);
-			ice_connections[addr.toString()] = ptr;
+			//ice_connections[addr.toString()] = ptr;
+			up->ice_connection = ptr;
 			ptr->send_binding_response(udp, sp);
 		}
 		delete sp;
@@ -82,8 +106,8 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 	}
 	else if (RtcDtls::is_dtls(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
-		auto it = dtls_connections.find(addr.toString());
-		if (it == dtls_connections.end())
+		//auto it = dtls_connections.find(addr.toString());
+		if (up->dtls_connection == nullptr)
 		{
 			if (offer_sdp->media_contents[0]->dtls->identity_fp)
 			{
@@ -94,8 +118,9 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 				bool flag = ptr->setup_dtls();
 				if (flag)
 				{
-					dtls_connections[addr.toString()] = ptr;
-					it = dtls_connections.find(addr.toString());
+					up->dtls_connection = ptr;
+					//dtls_connections[addr.toString()] = ptr;
+					//it = dtls_connections.find(addr.toString());
 				}
 				else
 				{
@@ -107,9 +132,13 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 				std::cerr << "remote digest is empty." << std::endl;
 			}
 		}
-		if (it != dtls_connections.end())
+		/*if (it != dtls_connections.end())
 		{
 			it->second->handle_dtls(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
+		}*/
+		if (up->dtls_connection)
+		{
+			up->dtls_connection->handle_dtls(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
 		}
 	}
 	else

@@ -13,6 +13,13 @@ class UdpReceiver;
 class IceConnection;
 class RtcDtls;
 
+class MemberUdpPorts
+{
+public:
+	std::shared_ptr<IceConnection> ice_connection = nullptr;
+	std::shared_ptr<RtcDtls> dtls_connection = nullptr;
+};
+
 class RoomMember
 {
 public:
@@ -25,8 +32,9 @@ public:
 	std::shared_ptr<SessionDescription> answer_sdp = nullptr;
 	std::shared_ptr<UdpReceiver> udp_receiver = nullptr;
 	//key为ip:port pair
-	std::unordered_map<std::string, std::shared_ptr<IceConnection>> ice_connections;
-	std::unordered_map<std::string, std::shared_ptr<RtcDtls>> dtls_connections;
+	//std::unordered_map<std::string, std::shared_ptr<IceConnection>> ice_connections;
+	//std::unordered_map<std::string, std::shared_ptr<RtcDtls>> dtls_connections;
+	std::unordered_map<std::string, std::shared_ptr<MemberUdpPorts>> udp_handles;
 
 private:
 	uvcore::IpAddress _addr;
