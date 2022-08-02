@@ -1,19 +1,68 @@
-﻿#include <juansfu/udp/srtp_subscriber.h>
-#include <juansfu/udp/srtp_transport.h>
+﻿#include <juansfu/udp/srtp_transport.h>
 #include <iostream>
 #include <juansfu/udp/srtp_session.h>
+#include <juansfu/rtc_base/copy_on_write_buffer.h>
 
 bool SrtpTransport::_srtp_init = false;
 
-void SrtpTransport::handle_rtp_data(uvcore::Udp*)
+SrtpTransport::SrtpTransport(uvcore::Udp* udp, const uvcore::IpAddress& addr)
+    :_udp(udp),
+    _addr(addr)
 {}
 
-void SrtpTransport::handle_rtcp_data(uvcore::Udp*)
-{}
-
-void SrtpTransport::add_subscriber(const std::string& addr, std::shared_ptr<SrtpSubscriber> sber)
+void SrtpTransport::handle_rtp_data(uvcore::Udp* udp)
 {
-	_subs_map[addr] = sber;
+    if (!_srtp_init)
+    {
+        std::cerr << "unprotect rtp failed, _srtp_init is nullptr" << std::endl;
+        return;
+    }
+    //1. 解密
+    //2. 转发给订阅者
+    std::string data((const char*)udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
+    int out_len = 0;
+    bool flag = _recv_session->unprotect_rtp((void*)data.c_str(), data.size(), &out_len);
+    if (out_len > 0 && flag)
+    {
+        for (auto it = _subs_map.begin(); it != _subs_map.end(); ++it)
+        {
+            it->second->on_rtp_packet((void*)data.c_str(), out_len);
+        }
+    }
+    else
+    {
+        std::cerr << "unprotect rtp failed, out_len = " << out_len << std::endl;
+    }
+}
+
+void SrtpTransport::handle_rtcp_data(uvcore::Udp* udp)
+{
+    if (!_srtp_init)
+    {
+        std::cerr << "unprotect rtp failed, _srtp_init is nullptr" << std::endl;
+        return;
+    }
+    //1. 解密
+    //2. 转发给订阅者
+    std::string data((const char*)udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size());
+    int out_len = 0;
+    bool flag = _recv_session->unprotect_rtcp((void*)data.c_str(), data.size(), &out_len);
+    if (out_len > 0 && flag)
+    {
+        for (auto it = _subs_map.begin(); it != _subs_map.end(); ++it)
+        {
+            it->second->on_rtcp_packet((void*)data.c_str(), out_len);
+        }
+    }
+    else
+    {
+        std::cerr << "unprotect rtp failed, out_len = " << out_len << std::endl;
+    }
+}
+
+void SrtpTransport::add_subscriber(const std::string& uid, std::shared_ptr<SrtpSubscriber> sber)
+{
+	_subs_map[uid] = sber;
 }
 
 void SrtpTransport::remove_subscriber(const std::string& addr)
@@ -95,5 +144,56 @@ void SrtpTransport::get_send_auth_tag_len(int* rtp_auth_tag_len, int* rtcp_auth_
     if (_send_session) 
     {
         _send_session->get_auth_tag_len(rtp_auth_tag_len, rtcp_auth_tag_len);
+    }
+}
+
+void SrtpTransport::on_rtp_packet(void* data, int len)
+{
+    if (!_srtp_init)
+    {
+        std::cerr << "on_rtp_packet rtp failed, _srtp_init is nullptr" << std::endl;
+        return;
+    }
+    //std::cout << "receive peer rtp data, len = " << len << std::endl;
+    int rtp_auth_tag_len = 0;
+    get_send_auth_tag_len(&rtp_auth_tag_len, nullptr);
+
+    rtc::CopyOnWriteBuffer packet((char*)data, len, len + rtp_auth_tag_len);
+
+    char* buf = (char*)packet.data();
+    int size = packet.size();
+    bool flag = _send_session->protect_rtp(buf, size, packet.capacity(), &size);
+    if (flag)
+    {
+        _udp->send2(buf, size, _addr);
+    }
+    else
+    {
+        std::cerr << "protect rtp failed." << std::endl;
+    }
+}
+
+void SrtpTransport::on_rtcp_packet(void* data, int len)
+{
+    if (!_srtp_init)
+    {
+        std::cerr << "on_rtcp_packet rtp failed, _srtp_init is nullptr" << std::endl;
+        return;
+    }
+    //std::cout << "receive peer rtcp data, len = " << len << std::endl;
+    int rtcp_auth_tag_len = 0;
+    get_send_auth_tag_len(nullptr, &rtcp_auth_tag_len);
+    rtc::CopyOnWriteBuffer packet((char*)data, len, len + rtcp_auth_tag_len + sizeof(uint32_t));
+
+    char* buf = (char*)packet.data();
+    int size = packet.size();
+    bool flag = _send_session->protect_rtcp(buf, size, packet.capacity(), &size);
+    if (flag)
+    {
+        _udp->send2(buf, size, _addr);
+    }
+    else
+    {
+        std::cerr << "protect rtcp failed." << std::endl;
     }
 }

@@ -229,6 +229,7 @@
     <ClCompile Include="system_wrappers\source\sleep.cc" />
     <ClCompile Include="udp\ice_connection.cpp" />
     <ClCompile Include="udp\rtc_dtls.cpp" />
+    <ClCompile Include="udp\rtc_stream_mgr.cpp" />
     <ClCompile Include="udp\srtp_session.cpp" />
     <ClCompile Include="udp\srtp_subscriber.cpp" />
     <ClCompile Include="udp\srtp_transport.cpp" />
@@ -362,6 +363,7 @@
     <ClInclude Include="system_wrappers\include\sleep.h" />
     <ClInclude Include="udp\ice_connection.h" />
     <ClInclude Include="udp\rtc_dtls.h" />
+    <ClInclude Include="udp\rtc_stream_mgr.h" />
     <ClInclude Include="udp\srtp_session.h" />
     <ClInclude Include="udp\srtp_subscriber.h" />
     <ClInclude Include="udp\srtp_transport.h" />

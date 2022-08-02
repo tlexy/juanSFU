@@ -8,6 +8,7 @@
 #include <juansfu/udp/rtc_dtls.h>
 #include <juansfu/udp/srtp_transport.h>
 #include <juansfu/rtprtcp/rtprtcp_pub.hpp>
+#include <juansfu/udp/rtc_stream_mgr.h>
 #include <iostream>
 
 void RoomMember::start_recv(const uvcore::IpAddress& addr)
@@ -100,7 +101,7 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 		//std::cerr << "is_rtcp protocol." << std::endl;
 		if (!up->srtp)
 		{
-			up->srtp = std::make_shared<SrtpTransport>();
+			up->srtp = std::make_shared<SrtpTransport>(udp, addr);
 			std::vector<int> send_extension_ids;
 			std::vector<int> recv_extension_ids;
 			int selected_crypto_suite;
@@ -123,6 +124,7 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 			}
 			
 		}
+		RtcStreamMgr::GetInstance()->add_stream(uid, addr.toString(), up->srtp);
 		if (is_rtcp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 		{
 			up->srtp->handle_rtcp_data(udp);

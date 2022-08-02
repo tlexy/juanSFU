@@ -5,6 +5,7 @@
 #include <juansfu/utils/global.h>
 #include <juansfu/signaling/room_member.h>
 #include <juansfu/signaling/port_mgr.h>
+#include <juansfu/udp/rtc_stream_mgr.h>
 
 void SignalingHandle::handle(const Json::Value& msg, std::shared_ptr<uvcore::TcpConnection> ptr)
 {
@@ -228,7 +229,7 @@ void SignalingHandle::handle_pull(const Json::Value& msg, std::shared_ptr<uvcore
 		std::cerr << "sdp error, roomid: " << roomid << ", uid: " << uid << ", sdp: " << sdpstr << std::endl;
 		return;
 	}
-
+	RtcStreamMgr::GetInstance()->add_subscriber(uid, remote_uid);
 	bool flag = member->offer_sdp->parse_sdp(vecs);
 	if (!flag)
 	{

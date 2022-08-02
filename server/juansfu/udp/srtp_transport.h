@@ -5,16 +5,16 @@
 #include <uvnet/core/ip_address.h>
 #include <stdint.h>
 #include <unordered_map>
-
+#include <juansfu/udp/srtp_subscriber.h>
 #include <srtp2/srtp.h>
 
-class SrtpSubscriber;
 class RtcDtls;
 class SrtpSession;
 
-class SrtpTransport
+class SrtpTransport : public SrtpSubscriber
 {
 public:
+    SrtpTransport(uvcore::Udp*, const uvcore::IpAddress& addr);
 	void handle_rtp_data(uvcore::Udp*);
 	void handle_rtcp_data(uvcore::Udp*);
     //设置加解密参数
@@ -27,10 +27,13 @@ public:
         size_t recv_key_len,
         const std::vector<int>& recv_extension_ids);
 
-	void add_subscriber(const std::string& addr, std::shared_ptr<SrtpSubscriber>);
+	void add_subscriber(const std::string& uid, std::shared_ptr<SrtpSubscriber>);
 	void remove_subscriber(const std::string& addr);
 
     void get_send_auth_tag_len(int* rtp_auth_tag_len, int* rtcp_auth_tag_len);
+
+    void on_rtp_packet(void* data, int len) override;
+    void on_rtcp_packet(void* data, int len) override;
 
 private:
     static void event_handle_thunk(srtp_event_data_t* ev);
@@ -41,6 +44,8 @@ private:
     static bool _srtp_init;
     std::shared_ptr<SrtpSession> _send_session = nullptr;
     std::shared_ptr<SrtpSession> _recv_session = nullptr;
+    uvcore::Udp* _udp;
+    uvcore::IpAddress _addr;
 
 };
 

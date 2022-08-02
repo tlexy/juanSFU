@@ -5,11 +5,13 @@
 #include <juansfu/utils/sutil.h>
 #include <assert.h>
 #include <juansfu/utils/global.h>
+#include <juansfu/udp/rtc_stream_mgr.h>
 
 void JuanSfu::init(const char* config_file)
 {
 	SignalingHandle::Instance();
 	UdpPortManager::Instance();
+	RtcStreamMgr::Instance();
 
 	Json::Value json = Json::nullValue;
 	bool flag = SUtil::readJson(config_file, json);

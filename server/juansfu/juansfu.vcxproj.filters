@@ -368,6 +368,9 @@
     <ClCompile Include="udp\srtp_session.cpp">
       <Filter>udp</Filter>
     </ClCompile>
+    <ClCompile Include="udp\rtc_stream_mgr.cpp">
+      <Filter>udp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -767,6 +770,9 @@
       <Filter>udp</Filter>
     </ClInclude>
     <ClInclude Include="udp\srtp_session.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="udp\rtc_stream_mgr.h">
       <Filter>udp</Filter>
     </ClInclude>
   </ItemGroup>
