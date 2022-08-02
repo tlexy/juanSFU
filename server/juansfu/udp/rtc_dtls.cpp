@@ -138,6 +138,39 @@ void RtcDtls::set_remote_dtls(const std::string& alg, const uint8_t* digest, siz
 	_remote_fingerprint_value = std::move(remote_fingerprint_value);
 }
 
+bool RtcDtls::extract_srtp_keys(int* selected_crypto_suite, std::string& send_key, std::string& recv_key)
+{
+	if (!_dtls_adapter)
+	{
+		return false;
+	}
+	_dtls_adapter->GetDtlsSrtpCryptoSuite(selected_crypto_suite);
+	int key_len;
+	int salt_len;
+	if (!rtc::GetSrtpKeyAndSaltLengths(*selected_crypto_suite, &key_len, &salt_len))
+	{
+		std::cerr << "GetSrtpKeyAndSaltLengths failed." << std::endl;
+		return false;
+	}
+	//|recv_key|send_key|recv_salt|send_salt
+	std::string results(key_len * 2 + salt_len * 2, '\0');
+	if (!_dtls_adapter->ExportKeyingMaterial("EXTRACTOR-dtls_srtp", NULL, 0, false, (uint8_t*)results.c_str(), results.size()))
+	{
+		return false;
+	}
+	int pos = 0;
+	std::string key1 = results.substr(0, key_len);
+	pos += key_len;
+	std::string key2 = results.substr(pos, key_len);
+	pos += key_len;
+	std::string salt1 = results.substr(pos, salt_len);
+	pos += salt_len;
+	std::string salt2 = results.substr(pos);
+	send_key = key2 + salt2;
+	recv_key = key1 + salt1;
+	return true;
+}
+
 bool RtcDtls::setup_dtls()
 {
 	if (!_dtls_adapter)

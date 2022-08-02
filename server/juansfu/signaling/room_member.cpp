@@ -6,6 +6,7 @@
 #include <juansfu/udp/rtc_dtls.h>
 #include <juansfu/signaling/port_mgr.h>
 #include <juansfu/udp/rtc_dtls.h>
+#include <juansfu/udp/srtp_transport.h>
 #include <juansfu/rtprtcp/rtprtcp_pub.hpp>
 #include <iostream>
 
@@ -61,13 +62,7 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 	}
 	if (StunPacket::is_stun(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
-		std::cout << "stun from: " << addr.toString() << std::endl;
-		/*auto it = ice_connections.find(addr.toString());
-		if (it != ice_connections.end())
-		{
-			it->second->on_udp_data(udp);
-			return;
-		}*/
+		//std::cout << "stun from: " << addr.toString() << std::endl;
 		if (up->ice_connection)
 		{
 			up->ice_connection->on_udp_data(udp);
@@ -88,21 +83,54 @@ void RoomMember::on_udp_receive(uvcore::Udp* udp, const uvcore::IpAddress& addr)
 		{
 			auto ptr = std::make_shared<IceConnection>(addr, _addr);
 			ptr->set_ice_pwd(answer_sdp->media_contents[0]->ice.passwd);
-			//ice_connections[addr.toString()] = ptr;
 			up->ice_connection = ptr;
 			ptr->send_binding_response(udp, sp);
 		}
 		delete sp;
 	}
-	else if (is_rtcp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
+	else if (is_rtcp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size())
+		|| is_rtp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{
-		//on_handle_rtcp_data(udp_data, udp_data_len, address);
+		if (!up->dtls_connection)
+		{
+			std::cerr << "dtls_connection not exist." << std::endl;
+			udp->get_inner_buffer()->reset();
+			return;
+		}
 		//std::cerr << "is_rtcp protocol." << std::endl;
-	}
-	else if (is_rtp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size())) {
-
-		//on_handle_rtp_data(udp_data, udp_data_len, address);
-		//std::cerr << "is_rtp protocol." << std::endl;
+		if (!up->srtp)
+		{
+			up->srtp = std::make_shared<SrtpTransport>();
+			std::vector<int> send_extension_ids;
+			std::vector<int> recv_extension_ids;
+			int selected_crypto_suite;
+			std::string send_key;
+			std::string recv_key;
+			bool flag = up->dtls_connection->extract_srtp_keys(&selected_crypto_suite, send_key, recv_key);
+			if (flag)
+			{
+				std::cout << "extract_srtp_keys, cs: " << selected_crypto_suite
+					<< "\tsend_key: " << send_key.size() << "\trecv_key: " << recv_key.size() << std::endl;
+				up->srtp->set_srtp_param(selected_crypto_suite, (uint8_t*)send_key.c_str(), send_key.size(),
+					send_extension_ids, selected_crypto_suite, (uint8_t*)recv_key.c_str(), recv_key.size(),
+					recv_extension_ids);
+			}
+			else
+			{
+				std::cerr << "dtls_connection extract_srtp_keys failed." << std::endl;
+				udp->get_inner_buffer()->reset();
+				return;
+			}
+			
+		}
+		if (is_rtcp(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
+		{
+			up->srtp->handle_rtcp_data(udp);
+		}
+		else
+		{
+			up->srtp->handle_rtp_data(udp);
+		}
 	}
 	else if (RtcDtls::is_dtls(udp->get_inner_buffer()->read_ptr(), udp->get_inner_buffer()->readable_size()))
 	{

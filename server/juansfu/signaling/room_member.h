@@ -12,12 +12,14 @@
 class UdpReceiver;
 class IceConnection;
 class RtcDtls;
+class SrtpTransport;
 
 class MemberUdpPorts
 {
 public:
 	std::shared_ptr<IceConnection> ice_connection = nullptr;
 	std::shared_ptr<RtcDtls> dtls_connection = nullptr;
+	std::shared_ptr<SrtpTransport> srtp = nullptr;
 };
 
 class RoomMember

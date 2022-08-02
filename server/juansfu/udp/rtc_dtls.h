@@ -55,6 +55,9 @@ public:
     bool setup_dtls();
     void handle_dtls(const uint8_t* data, size_t len);
 
+    bool extract_srtp_keys(int* selected_crypto_suite,
+        std::string& send_key, std::string& recv_key);
+
     void destory();
 
 private:
