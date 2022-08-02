@@ -65,9 +65,13 @@ void SrtpTransport::add_subscriber(const std::string& uid, std::shared_ptr<SrtpS
 	_subs_map[uid] = sber;
 }
 
-void SrtpTransport::remove_subscriber(const std::string& addr)
+void SrtpTransport::remove_subscriber(const std::string& uid)
 {
-	_subs_map.erase(addr);
+    if (_subs_map.find(uid) == _subs_map.end())
+    {
+        std::cerr << "remove_subscriber failed, uid: " << uid << std::endl;
+    }
+	_subs_map.erase(uid);
 }
 
 bool SrtpTransport::set_srtp_param(int send_cs,

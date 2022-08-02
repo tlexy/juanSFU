@@ -17,6 +17,7 @@ public:
 	void add_stream(const std::string& uid, const std::string& addr, std::shared_ptr<SrtpTransport>);
 	//uid订阅target_uid
 	void add_subscriber(const std::string& uid, const std::string& target_uid);
+	void remove_subscriber(const std::string& uid);
 
 private:
 	std::unordered_map<std::string, std::pair<std::string, std::string>> _subs_map;

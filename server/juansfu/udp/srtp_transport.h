@@ -28,7 +28,7 @@ public:
         const std::vector<int>& recv_extension_ids);
 
 	void add_subscriber(const std::string& uid, std::shared_ptr<SrtpSubscriber>);
-	void remove_subscriber(const std::string& addr);
+	void remove_subscriber(const std::string& uid);
 
     void get_send_auth_tag_len(int* rtp_auth_tag_len, int* rtcp_auth_tag_len);
 

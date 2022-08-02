@@ -23,8 +23,30 @@ void RtcStreamMgr::add_stream(const std::string& uid, const std::string& addr, s
 		auto sit = _streams.find(it->second.first);
 		if (sit != _streams.end())
 		{
-			sit->second->add_subscriber(it->second.first, st);
-			st->add_subscriber(uid, sit->second);
+			//sit->second->add_subscriber(it->second.first, st);
+			//st->add_subscriber(uid, sit->second);
+			sit->second->add_subscriber(uid, st);
+			st->add_subscriber(it->second.first, sit->second);
 		}
 	}
+}
+
+void RtcStreamMgr::remove_subscriber(const std::string& uid)
+{
+	auto it = _subs_map.find(uid);
+	if (it == _subs_map.end())
+	{
+		return;
+	}
+	auto sit = _streams.find(uid);
+	if (sit != _streams.end())
+	{
+		sit->second->remove_subscriber(it->second.first);
+	}
+	sit = _streams.find(it->second.first);
+	if (sit != _streams.end())
+	{
+		sit->second->remove_subscriber(uid);
+	}
+
 }

@@ -39,6 +39,7 @@ void RoomMember::destory()
 	{
 		it->second->destory();
 	}*/
+	RtcStreamMgr::GetInstance()->remove_subscriber(uid);
 	for (auto it = udp_handles.begin(); it != udp_handles.end(); ++it)
 	{
 		if (it->second->dtls_connection)
