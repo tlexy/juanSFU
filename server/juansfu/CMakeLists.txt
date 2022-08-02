@@ -66,9 +66,7 @@ aux_source_directory(./system_wrappers/source SRCS)
 aux_source_directory(./udp SRCS)
 aux_source_directory(./utils SRCS)
 
-message(STATUS ${SRCS})
-
-# file(GLOB SRCS "*.cpp" "./nodemgr/*.cpp" "./nodemgr/business/*.cpp" "./nodemgr/common/*.cpp" "./nodemgr/core/*.cpp" "./nodemgr/handle/*.cpp")
+# message(STATUS ${SRCS})
 
 link_directories(${CMAKE_SOURCE_DIR}/libs)
 link_directories(/usr/local/lib)
