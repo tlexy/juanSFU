@@ -34,7 +34,7 @@ link_directories(${LIBUV_LIBRARY_DIRS})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 include_directories(/usr/local/include)
-include_directories(${CMAKE_SOURCE_DIR}
+include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/..)
 include_directories(${CMAKE_SOURCE_DIR}/../../..)
 include_directories(${CMAKE_SOURCE_DIR}/../../../uvnet)
@@ -45,7 +45,7 @@ include_directories(${CMAKE_SOURCE_DIR}/../../../uvnet)
 
 # file(GLOB LIBS "*.a" "pActor/libs" "genernal/libs" "UvNetBase/libs")
 SET(EXTRA_LIBS uvnet)
-SET(LIBS uv ssl crypto pthread jsoncpp)
+SET(LIBS uv ssl crypto srtp2 pthread jsoncpp)
 
 aux_source_directory(. SRCS)
 #aux_source_directory(../backward SRCS)
