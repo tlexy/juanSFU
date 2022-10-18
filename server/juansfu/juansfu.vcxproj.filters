@@ -365,6 +365,12 @@
     <ClCompile Include="udp\rtc_stream_mgr.cpp">
       <Filter>udp</Filter>
     </ClCompile>
+    <ClCompile Include="rtc_base\internal\default_socket_server.cc">
+      <Filter>rtc_base\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="rtc_base\physical_socket_server.cc">
+      <Filter>rtc_base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signaling\wss_server.h">
@@ -762,6 +768,12 @@
     </ClInclude>
     <ClInclude Include="udp\rtc_stream_mgr.h">
       <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\internal\default_socket_server.h">
+      <Filter>rtc_base\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="rtc_base\physical_socket_server.h">
+      <Filter>rtc_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
