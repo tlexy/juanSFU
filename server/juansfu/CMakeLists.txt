@@ -6,7 +6,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_definitions(-DWEBRTC_POSIX)
+add_definitions(-DWEBRTC_POSIX -DWEBRTC_LINUX)
 
 # SET(CMAKE_C_FLAGS "-std=c11 -O2 -W -w")
 # SET(CMAKE_CXX_FLAGS "-std=c++11 -W -w")
@@ -36,8 +36,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 include_directories(/usr/local/include)
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/..)
-include_directories(${CMAKE_SOURCE_DIR}/../../..)
-include_directories(${CMAKE_SOURCE_DIR}/../../../uvnet)
+# include_directories(${CMAKE_SOURCE_DIR}/../../..)
+# include_directories(${CMAKE_SOURCE_DIR}/../../../uvnet)
+include_directories(${CMAKE_SOURCE_DIR}/../uvnet)
+include_directories(${CMAKE_SOURCE_DIR}/../abseil-cpp)
 
 # add_subdirectory(${CMAKE_SOURCE_DIR}/pActor)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/genernal)
@@ -71,6 +73,7 @@ aux_source_directory(./utils SRCS)
 link_directories(${CMAKE_SOURCE_DIR}/libs)
 link_directories(/usr/local/lib)
 link_directories(/usr/local/lib64)
+link_directories(${CMAKE_SOURCE_DIR}/../uvnet/objs)
 
 # export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 add_executable(${PROJECT_NAME} ${SRCS})

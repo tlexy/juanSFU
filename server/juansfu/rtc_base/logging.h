@@ -16,4 +16,8 @@
 
 #define RTC_DLOG_F(level) std::cout
 
+#define RTC_LOG_E(a, b, c) std::cout
+
+#define RTC_LOG_ERR(S) std::cout
+
 #endif

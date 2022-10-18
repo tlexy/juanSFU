@@ -1,5 +1,6 @@
 ﻿#include <juansfu/udp/srtp_session.h>
 #include <iostream>
+#include <string.h>
 
 SrtpSession::SrtpSession()
 {}
