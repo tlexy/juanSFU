@@ -737,7 +737,7 @@ bool SocketDispatcher::IsDescriptorClosed() {
         // This is dangerous: if we keep attempting to access a FD after close,
         // it could be reopened by something else making us think it's still
         // open. Note that this is only a DCHECK.
-        RTC_DCHECK_NOTREACHED();
+        //RTC_DCHECK_NOTREACHED();
         return true;
       // Returned during ungraceful peer shutdown.
       case ECONNRESET:
@@ -759,7 +759,7 @@ bool SocketDispatcher::IsDescriptorClosed() {
         // "connection lost"-type error as a blocking error, because typically
         // the next recv() will get EOF, so we'll still eventually notice that
         // the socket is closed.
-        RTC_LOG_ERR(LS_WARNING) << "Assuming benign blocking error";
+        //RTC_LOG_ERR(LS_WARNING) << "Assuming benign blocking error";
         return false;
     }
   }
@@ -1320,7 +1320,7 @@ bool PhysicalSocketServer::WaitSelect(int cmsWait, bool process_io) {
     // If error, return error.
     if (n < 0) {
       if (errno != EINTR) {
-        RTC_LOG_E(LS_ERROR, EN, errno) << "select";
+        //RTC_LOG_E(LS_ERROR, EN, errno) << "select";
         return false;
       }
       // Else ignore the error and keep going. If this EINTR was for one of the

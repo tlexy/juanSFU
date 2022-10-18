@@ -163,7 +163,6 @@
     <ClCompile Include="rtc_base\event.cc" />
     <ClCompile Include="rtc_base\event_tracer.cc" />
     <ClCompile Include="rtc_base\helpers.cc" />
-    <ClCompile Include="rtc_base\internal\default_socket_server.cc" />
     <ClCompile Include="rtc_base\ip_address.cc" />
     <ClCompile Include="rtc_base\location.cc" />
     <ClCompile Include="rtc_base\message_digest.cc" />
@@ -180,7 +179,6 @@
     <ClCompile Include="rtc_base\openssl_session_cache.cc" />
     <ClCompile Include="rtc_base\openssl_stream_adapter.cc" />
     <ClCompile Include="rtc_base\openssl_utility.cc" />
-    <ClCompile Include="rtc_base\physical_socket_server.cc" />
     <ClCompile Include="rtc_base\platform_thread.cc" />
     <ClCompile Include="rtc_base\platform_thread_types.cc" />
     <ClCompile Include="rtc_base\rtc_certificate.cc" />
@@ -269,7 +267,6 @@
     <ClInclude Include="rtc_base\event.h" />
     <ClInclude Include="rtc_base\event_tracer.h" />
     <ClInclude Include="rtc_base\helpers.h" />
-    <ClInclude Include="rtc_base\internal\default_socket_server.h" />
     <ClInclude Include="rtc_base\ip_address.h" />
     <ClInclude Include="rtc_base\location.h" />
     <ClInclude Include="rtc_base\logging.h" />
@@ -294,7 +291,6 @@
     <ClInclude Include="rtc_base\openssl_session_cache.h" />
     <ClInclude Include="rtc_base\openssl_stream_adapter.h" />
     <ClInclude Include="rtc_base\openssl_utility.h" />
-    <ClInclude Include="rtc_base\physical_socket_server.h" />
     <ClInclude Include="rtc_base\platform_thread.h" />
     <ClInclude Include="rtc_base\platform_thread_types.h" />
     <ClInclude Include="rtc_base\ref_count.h" />

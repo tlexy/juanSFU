@@ -251,17 +251,11 @@
     <ClCompile Include="rtc_base\null_socket_server.cc">
       <Filter>rtc_base</Filter>
     </ClCompile>
-    <ClCompile Include="rtc_base\internal\default_socket_server.cc">
-      <Filter>rtc_base\internal</Filter>
-    </ClCompile>
     <ClCompile Include="rtc_base\synchronization\yield.cc">
       <Filter>rtc_base\synchronization</Filter>
     </ClCompile>
     <ClCompile Include="rtc_base\synchronization\yield_policy.cc">
       <Filter>rtc_base\synchronization</Filter>
-    </ClCompile>
-    <ClCompile Include="rtc_base\physical_socket_server.cc">
-      <Filter>rtc_base</Filter>
     </ClCompile>
     <ClCompile Include="rtc_base\task_utils\pending_task_safety_flag.cc">
       <Filter>rtc_base\task_utils</Filter>
@@ -628,17 +622,11 @@
     <ClInclude Include="rtc_base\null_socket_server.h">
       <Filter>rtc_base</Filter>
     </ClInclude>
-    <ClInclude Include="rtc_base\internal\default_socket_server.h">
-      <Filter>rtc_base\internal</Filter>
-    </ClInclude>
     <ClInclude Include="rtc_base\synchronization\yield.h">
       <Filter>rtc_base\synchronization</Filter>
     </ClInclude>
     <ClInclude Include="rtc_base\synchronization\yield_policy.h">
       <Filter>rtc_base\synchronization</Filter>
-    </ClInclude>
-    <ClInclude Include="rtc_base\physical_socket_server.h">
-      <Filter>rtc_base</Filter>
     </ClInclude>
     <ClInclude Include="rtc_base\task_utils\pending_task_safety_flag.h">
       <Filter>rtc_base\task_utils</Filter>
