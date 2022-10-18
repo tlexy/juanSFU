@@ -18,7 +18,7 @@ do_install(){
 	cd ../../
 	tar xzvf libuv-v1.44.1.tar.gz && cd libuv-v1.44.1 && ./autogen.sh && ./configure && make && make install
 	cd ..
-	unzip libsrtp-2.4.2.zip && cd libsrtp-2.4.2 &&
+	unzip libsrtp-2.4.2.zip && cd libsrtp-2.4.2 && ./configure && make && make install
 }
 
 cmd1="install"
