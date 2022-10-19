@@ -21,13 +21,18 @@ void UdpReceiver::start()
 		std::cerr << "bind udp error." << std::endl;
 		return;
 	}
-	std::cout << "bind udp success." << std::endl;
+	std::cout << "start to bind udp addr: " << _addr.toString() << std::endl;
 	_udp = _udp_server->addBind(_addr, std::bind(&UdpReceiver::on_udp_receive, this, _1, _2));
 }
 
 void UdpReceiver::on_udp_receive(uvcore::Udp* udp, const struct sockaddr* addr)
 {
 	//std::cout << "recv udp data, len: " << udp->get_inner_buffer()->readable_size() << std::endl;
+	if (!udp || !addr)
+	{
+		std::cerr << "UDP RECEIVE ERROR." << __FUNCTION__ << std::endl;
+		return;
+	}
 	if (_data_cb)
 	{
 		uvcore::IpAddress ipaddr = uvcore::IpAddress::fromRawSocketAddress((sockaddr*)addr, sizeof(struct sockaddr_in));
