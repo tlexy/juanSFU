@@ -16,8 +16,8 @@ let zal_rtc = new ZalRtc("ws://192.168.110.10:5000/signaling");
 * [abseil-cpp](https://github.com/abseil/abseil-cpp)
 
 ### windows编译
-* 根据项目的依赖配置库路径
-* 打开juansfu.sln执行编译
+* 根据项目的依赖配置库路径（这里可能需要手动配置uvnet、openssl、libsrtp及abseil-cpp的头文件路径及库文件路径）
+* 打开juansfu.sln执行编译，推荐使用VS 2019打开
 * windows下的openssl依赖[openssl_win](https://github.com/tlexy/openssl1_1-win-build)
 
 ### ubuntu linux服务器端编译
