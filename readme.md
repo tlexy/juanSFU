@@ -27,7 +27,7 @@ let zal_rtc = new ZalRtc("ws://192.168.110.10:5000/signaling");
 
 ### 运行
 * 将juanSFU/server/juansfu目录下的webrtc_config.json配置文件拷贝到可执行文件所在目录(juanSFU/server/juansfu/bin)
-* 修改配置文件中的server_ip字段为本地ip
+* 修改配置文件中的server_ip字段为可访问ip
 
 ### 客户端说明
 * 只支持一端推流一端拉流
