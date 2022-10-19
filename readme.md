@@ -18,12 +18,17 @@ let zal_rtc = new ZalRtc("ws://192.168.110.10:5000/signaling");
 ### windows编译
 * 根据项目的依赖配置库路径
 * 打开juansfu.sln执行编译
+* windows下的openssl依赖[openssl_win](https://github.com/tlexy/openssl1_1-win-build)
 
 ### ubuntu linux服务器端编译
 * 进入server目录，运行ubuntu_3rd_build.sh
 * 然后运行build_other.sh
 * 进入server/juansfu目录，新建build目录，进入build目录，执行cmake ..
-
+* 如果自动执行不成功，可以尝试手动执行上面两个文件的命令
+* 执行cmake命令时，可能需要配置
+```
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
+```
 
 ### 运行
 * 将juanSFU/server/juansfu目录下的webrtc_config.json配置文件拷贝到可执行文件所在目录(juanSFU/server/juansfu/bin)
